@@ -8,11 +8,11 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const route = require("./routes/route");
 dotenv.config();
-// Root of the project //
-app.use("/", route);
 app.use(express.json());
 app.use(helmet());
 app.use(cors());
+// Root of the project //
+app.use("/", route);
 app.listen(port, () => {
     try {
         console.log(`App listening on port ${port}`);

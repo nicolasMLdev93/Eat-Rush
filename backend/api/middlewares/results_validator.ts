@@ -1,17 +1,17 @@
 const { query, validationResult } = require("express-validator");
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 
 export const vaidate_Results = async (
   req: Request,
   res: Response,
-  next
+  next: NextFunction
 ): Promise<void> => {
   try {
     const errors = await validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).json({
         success: false,
-        errors: errors.array().map((error:any) => ({
+        errors: errors.array().map((error: any) => ({
           field: error.param,
           message: error.msg,
           value: error.value,
