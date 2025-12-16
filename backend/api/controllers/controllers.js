@@ -1,15 +1,16 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const { Product, Restaurant, Category } = require("../../models");
 // Get all products from Database //
 exports.getProducts = async (req, res) => {
     try {
         const products = await Product.findAll();
         res.status(200).json({
-            products: products
+            products: products,
         });
     }
     catch (error) {
-        console.error('Error getting products:', error);
+        console.error("Error getting products:", error);
         res.status(500).json({ error: "Error getting all products!" });
     }
 };
@@ -18,11 +19,11 @@ exports.getRestaurants = async (req, res) => {
     try {
         const restaurants = await Restaurant.findAll();
         res.status(200).json({
-            restaurants: restaurants
+            restaurants: restaurants,
         });
     }
     catch (error) {
-        console.error('Error getting all restaurants:', error);
+        console.error("Error getting all restaurants:", error);
         res.status(500).json({ error: "Error getting all restaurants!" });
     }
 };
@@ -31,11 +32,11 @@ exports.getCategories = async (req, res) => {
     try {
         const categories = await Category.findAll();
         res.status(200).json({
-            categories: categories
+            categories: categories,
         });
     }
     catch (error) {
-        console.error('Error getting all categories:', error);
+        console.error("Error getting all categories:", error);
         res.status(500).json({ error: "Error getting all categories!" });
     }
 };
