@@ -8,7 +8,11 @@ const jwt = require("jsonwebtoken");
 // Get all products from Database //
 exports.getProducts = async (req: Request, res: Response): Promise<void> => {
   try {
-    const products = await Product.findAll();
+    const products = await Product.findAll({
+      where: {
+        isAvailable: true,
+      },
+    });
     res.status(200).json({
       products: products,
       success: true,
@@ -22,7 +26,11 @@ exports.getProducts = async (req: Request, res: Response): Promise<void> => {
 // Get all restaurants from Database //
 exports.getRestaurants = async (req: Request, res: Response): Promise<void> => {
   try {
-    const restaurants = await Restaurant.findAll();
+    const restaurants = await Restaurant.findAll({
+      where: {
+        isActive: true,
+      },
+    });
     res.status(200).json({
       restaurants: restaurants,
       success: true,
@@ -35,7 +43,11 @@ exports.getRestaurants = async (req: Request, res: Response): Promise<void> => {
 // Get all categories from Database //
 exports.getCategories = async (req: Request, res: Response): Promise<void> => {
   try {
-    const categories = await Category.findAll();
+    const categories = await Category.findAll({
+      where: {
+        isActive: true,
+      },
+    });
     res.status(200).json({
       categories: categories,
       success: true,
@@ -199,6 +211,14 @@ exports.deleteCategory = async (req: Request, res: Response) => {
         },
       }
     );
+    await Product.update(
+      { isAvailable: false },
+      {
+        where: {
+          categoryId: id,
+        },
+      }
+    );
     res.status(201).json({
       success: true,
       message: "Category deleted successfully",
@@ -220,9 +240,69 @@ exports.deleteRestaurant = async (req: Request, res: Response) => {
         },
       }
     );
+    await Product.update(
+      { isAvailable: false },
+      {
+        where: {
+          restaurantId: id,
+        },
+      }
+    );
     res.status(201).json({
       success: true,
       message: "Restaurant deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+// Get products, rest. and cat. by params and query params //
+exports.getProd_byId = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const products = await Product.findAll({
+      where: {
+        id: id,
+      },
+    });
+    res.status(201).json({
+      success: true,
+      products: products,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+exports.getProd_byCat = async (req: Request, res: Response) => {
+  const { categoryId } = req.params;
+  try {
+    const products = await Product.findAll({
+      where: {
+        categoryId: categoryId,
+      },
+    });
+    res.status(201).json({
+      success: true,
+      products: products,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+exports.getProd_byRest = async (req: Request, res: Response) => {
+  const { restaurantId } = req.params;
+  try {
+    const products = await Product.findAll({
+      where: {
+        restaurantId: restaurantId,
+      },
+    });
+    res.status(201).json({
+      success: true,
+      products: products,
     });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error", success: false });

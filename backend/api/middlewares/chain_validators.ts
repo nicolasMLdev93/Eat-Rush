@@ -188,3 +188,27 @@ export const validateSoftDelete: ValidationChain[] = [
     .isInt()
     .withMessage("The field 'Id' must be an integer!"),
 ];
+
+export const validateGetProduct_Id: ValidationChain[] = [
+  param("id")
+    .notEmpty()
+    .withMessage("The field 'Id' can´t be empty!")
+    .isNumeric()
+    .withMessage("The field 'Id' must be numeric!"),
+];
+
+export const validateGetProduct_Cat: ValidationChain[] = [
+  param("categoryId")
+    .notEmpty()
+    .withMessage("The field 'categoryId' can´t be empty!")
+    .isNumeric()
+    .withMessage("The field 'categoryId' must be numeric!"),
+];
+
+export const validateGetProduct_Rest: ValidationChain[] = [
+  param("restaurantId")
+    .notEmpty()
+    .withMessage("The field 'restaurantId' can´t be empty!")
+    .isNumeric()
+    .withMessage("The field 'restaurantId' must be numeric!"),
+];

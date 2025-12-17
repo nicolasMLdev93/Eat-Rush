@@ -9,6 +9,9 @@ const {
   validateCreateRestaurant,
   validateCreateCategory,
   validateSoftDelete,
+  validateGetProduct_Id,
+  validateGetProduct_Cat,
+  validateGetProduct_Rest,
 } = require("../middlewares/chain_validators");
 // Results validators //
 const { validate_Results } = require("../middlewares/results_validator");
@@ -22,6 +25,9 @@ const {
   validateExistantDeleteRest,
   validateExistantDeleteCat,
   validateExistantDeleteProd,
+  validateExistanProd_byId,
+  validateExistanProd_byCat,
+  validateExistanProd_byRest,
 } = require("../middlewares/existence_validators");
 
 // Validate admin with token
@@ -36,7 +42,13 @@ const {
   loginUser,
   createProduct,
   createRestaurant,
-  createCategory,deleteRestaurant,deleteProduct,deleteCategory
+  createCategory,
+  deleteRestaurant,
+  deleteProduct,
+  deleteCategory,
+  getProd_byId,
+  getProd_byCat,
+  getProd_byRest,
 } = require("../controllers/controllers");
 
 // Basic getters //
@@ -100,7 +112,8 @@ router.put(
   validateSoftDelete,
   validate_Results,
   validateAdminToken,
-  validateExistantDeleteProd,deleteProduct
+  validateExistantDeleteProd,
+  deleteProduct
 );
 
 router.put(
@@ -108,7 +121,8 @@ router.put(
   validateSoftDelete,
   validate_Results,
   validateAdminToken,
-  validateExistantDeleteRest,deleteRestaurant
+  validateExistantDeleteRest,
+  deleteRestaurant
 );
 
 router.put(
@@ -116,7 +130,33 @@ router.put(
   validateSoftDelete,
   validate_Results,
   validateAdminToken,
-  validateExistantDeleteCat,deleteCategory
+  validateExistantDeleteCat,
+  deleteCategory
+);
+
+// Get products, restaurants, categories by params and query params //
+router.get(
+  "/products_id/:id",
+  validateGetProduct_Id,
+  validate_Results,
+  validateExistanProd_byId,
+  getProd_byId
+);
+
+router.get(
+  "/products_cat/:categoryId",
+  validateGetProduct_Cat,
+  validate_Results,
+  validateExistanProd_byCat,
+  getProd_byCat
+);
+
+router.get(
+  "/products_rest/:restaurantId",
+  validateGetProduct_Rest,
+  validate_Results,
+  validateExistanProd_byRest,
+  getProd_byRest
 );
 
 module.exports = router;

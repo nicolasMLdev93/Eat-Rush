@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateSoftDelete = exports.validateCreateCategory = exports.validateCreateRestaurant = exports.validateLoginUser = exports.validateRegisterUser = exports.validateCreateProduct = void 0;
+exports.validateGetProduct_Rest = exports.validateGetProduct_Cat = exports.validateGetProduct_Id = exports.validateSoftDelete = exports.validateCreateCategory = exports.validateCreateRestaurant = exports.validateLoginUser = exports.validateRegisterUser = exports.validateCreateProduct = void 0;
 const express_validator_1 = require("express-validator");
 exports.validateCreateProduct = [
     (0, express_validator_1.body)("name")
@@ -172,4 +172,25 @@ exports.validateSoftDelete = [
         .withMessage("The field 'Id' can´t be empty!")
         .isInt()
         .withMessage("The field 'Id' must be an integer!"),
+];
+exports.validateGetProduct_Id = [
+    (0, express_validator_1.param)("id")
+        .notEmpty()
+        .withMessage("The field 'Id' can´t be empty!")
+        .isNumeric()
+        .withMessage("The field 'Id' must be numeric!"),
+];
+exports.validateGetProduct_Cat = [
+    (0, express_validator_1.param)("categoryId")
+        .notEmpty()
+        .withMessage("The field 'categoryId' can´t be empty!")
+        .isNumeric()
+        .withMessage("The field 'categoryId' must be numeric!"),
+];
+exports.validateGetProduct_Rest = [
+    (0, express_validator_1.param)("restaurantId")
+        .notEmpty()
+        .withMessage("The field 'restaurantId' can´t be empty!")
+        .isNumeric()
+        .withMessage("The field 'restaurantId' must be numeric!"),
 ];

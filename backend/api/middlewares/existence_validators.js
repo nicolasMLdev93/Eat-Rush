@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateExistantDeleteRest = exports.validateExistantDeleteCat = exports.validateExistantDeleteProd = exports.validateExistantCreateCategory = exports.validateExistantCreateRestaurant = exports.validateExistantCreateProduct = exports.validateExistantUser_register = exports.validateExistantUser_login = void 0;
+exports.validateExistanProd_byRest = exports.validateExistanProd_byCat = exports.validateExistanProd_byId = exports.validateExistantDeleteRest = exports.validateExistantDeleteCat = exports.validateExistantDeleteProd = exports.validateExistantCreateCategory = exports.validateExistantCreateRestaurant = exports.validateExistantCreateProduct = exports.validateExistantUser_register = exports.validateExistantUser_login = void 0;
 const { Product, Restaurant, Category, User } = require("../../models");
 const jwt = require("jsonwebtoken");
 const validateExistantUser_login = async (req, res, next) => {
@@ -197,3 +197,78 @@ const validateExistantDeleteRest = async (req, res, next) => {
     }
 };
 exports.validateExistantDeleteRest = validateExistantDeleteRest;
+const validateExistanProd_byId = async (req, res, next) => {
+    const { id } = req.params;
+    try {
+        const product = await Product.findOne({
+            where: { id: id, isAvailable: true },
+        });
+        if (!product || product.isAvailable == false) {
+            res.status(404).json({
+                error: "A product with that id not exists!",
+                success: false,
+            });
+            return;
+        }
+        else {
+            next();
+        }
+    }
+    catch (error) {
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.validateExistanProd_byId = validateExistanProd_byId;
+const validateExistanProd_byCat = async (req, res, next) => {
+    const { categoryId } = req.params;
+    try {
+        const product = await Product.findOne({
+            where: { categoryId: categoryId, isAvailable: true },
+        });
+        if (!product || product.isAvailable == false) {
+            res.status(404).json({
+                error: "A product with that categoryId not exists!",
+                success: false,
+            });
+            return;
+        }
+        else {
+            next();
+        }
+    }
+    catch (error) {
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.validateExistanProd_byCat = validateExistanProd_byCat;
+const validateExistanProd_byRest = async (req, res, next) => {
+    const { restaurantId } = req.params;
+    try {
+        const product = await Product.findOne({
+            where: { restaurantId: restaurantId, isAvailable: true },
+        });
+        if (!product || product.isAvailable == false) {
+            res.status(404).json({
+                error: "A product with that restaurantId not exists!",
+                success: false,
+            });
+            return;
+        }
+        else {
+            next();
+        }
+    }
+    catch (error) {
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.validateExistanProd_byRest = validateExistanProd_byRest;

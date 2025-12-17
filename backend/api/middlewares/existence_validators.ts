@@ -215,3 +215,84 @@ export const validateExistantDeleteRest = async (
     });
   }
 };
+
+export const validateExistanProd_byId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  try {
+    const product = await Product.findOne({
+      where: { id: id, isAvailable: true },
+    });
+    if (!product || product.isAvailable == false) {
+      res.status(404).json({
+        error: "A product with that id not exists!",
+        success: false,
+      });
+      return;
+    } else {
+      next();
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+export const validateExistanProd_byCat = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { categoryId } = req.params;
+  try {
+    const product = await Product.findOne({
+      where: { categoryId: categoryId, isAvailable: true },
+    });
+    if (!product || product.isAvailable == false) {
+      res.status(404).json({
+        error: "A product with that categoryId not exists!",
+        success: false,
+      });
+      return;
+    } else {
+      next();
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+export const validateExistanProd_byRest = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { restaurantId } = req.params;
+  try {
+    const product = await Product.findOne({
+      where: { restaurantId: restaurantId, isAvailable: true },
+    });
+    if (!product || product.isAvailable == false) {
+      res.status(404).json({
+        error: "A product with that restaurantId not exists!",
+        success: false,
+      });
+      return;
+    } else {
+      next();
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
+  }
+};
