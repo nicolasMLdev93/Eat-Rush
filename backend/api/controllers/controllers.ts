@@ -1,7 +1,9 @@
 const { Product, Restaurant, Category, User } = require("../../models");
 import { Request, Response, NextFunction } from "express";
 import { body, param, query, ValidationChain } from "express-validator";
+import { permission } from "node:process";
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // Get all products from Database //
 exports.getProducts = async (req: Request, res: Response): Promise<void> => {
@@ -59,6 +61,79 @@ exports.registerUser = async (req: Request, res: Response): Promise<void> => {
       updatedAt: new Date(),
     });
     res.status(200).json({ Success: "New user created!", success: true });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+// Login user //
+exports.loginUser = async (req: Request, res: Response): Promise<void> => {
+  const { email, password } = req.body;
+  try {
+    const result = await User.findOne({ where: { email: email } });
+    const match = await bcrypt.compare(password, result.password);
+    if (match) {
+      const token = jwt.sign(
+        {
+          token: result.id,
+          email: result.email,
+          role: result.role,
+        },
+        process.env.JWT_SECRET || "secret"
+        { expiresIn: "1h" }
+      );
+      res.status(200).json({
+        message: `Welcome user ${email}`,
+        token: token,
+        success: true,
+      });
+    } else {
+      res
+        .status(400)
+        .json({ error: "Invalid password! Try again!", success: false });
+      return;
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+// Register new product //
+exports.createProduct = async (req: Request, res: Response): Promise<void> => {
+  const { name, description, price, isAvailable, categoryId, restaurantId } =
+    req.body;
+  try {
+    const restaurant = await User.findOne({
+      where: { restaurantId: restaurantId },
+    });
+    if (!restaurant) {
+      res.status(404).json({
+        error: "Restaurant of the new product not found!",
+        success: false,
+      });
+      return;
+    }
+    const category = await Category.findOne({
+      where: { categoryId: categoryId },
+    });
+    if (!category) {
+      res.status(404).json({
+        error: "Category of the new product not found!",
+        success: false,
+      });
+      return;
+    }
+    await Product.create({
+      name: name,
+      description: description,
+      price: price,
+      isAvailable: isAvailable,
+      categoryId: categoryId,
+      restaurantId: restaurantId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    res.status(200).json({ Success: "New product created!", success: true });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error", success: false });
   }

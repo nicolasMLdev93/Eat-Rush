@@ -13,6 +13,7 @@ const { vaidate_Results } = require("../middlewares/results_validator");
 const {
   validateExistantUser_register,
   validateExistantUser_login,
+  validateAdminToken,
 } = require("../middlewares/existence_validators");
 // Controllers//
 const {
@@ -20,6 +21,8 @@ const {
   getRestaurants,
   getCategories,
   registerUser,
+  loginUser,
+  createProduct,
 } = require("../controllers/controllers");
 
 // Basic getters //
@@ -31,7 +34,13 @@ router.get("/restaurants", getRestaurants);
 router.get("/categories", getCategories);
 
 // Create products, restaurants and categories //
-router.post("/products", validateCreateProduct, vaidate_Results);
+router.post(
+  "/products",
+  validateCreateProduct,
+  vaidate_Results,
+  validateAdminToken,
+  createProduct
+);
 
 // Create users //
 router.post(
@@ -44,10 +53,11 @@ router.post(
 
 // Login users//
 router.post(
-  "login",
+  "/login",
   validateLoginUser,
   vaidate_Results,
-  validateExistantUser_login
+  validateExistantUser_login,
+  loginUser
 );
 
 module.exports = router;
