@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateLoginUser = exports.validateRegisterUser = exports.validateCreateProduct = void 0;
+exports.validateCreateCategory = exports.validateCreateRestaurant = exports.validateLoginUser = exports.validateRegisterUser = exports.validateCreateProduct = void 0;
 const express_validator_1 = require("express-validator");
 exports.validateCreateProduct = [
     (0, express_validator_1.body)("name")
@@ -112,4 +112,57 @@ exports.validateLoginUser = [
         .withMessage("Password must be between 8 and 100 characters!")
         .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
         .withMessage("Password must contain at least one uppercase letter, one lowercase letter, one number and one special character!"),
+];
+exports.validateCreateRestaurant = [
+    (0, express_validator_1.body)("name")
+        .isString()
+        .withMessage("The name of the restaurant must be a string!")
+        .notEmpty()
+        .withMessage("The field 'name' can't be empty!")
+        .isLength({ max: 50 })
+        .withMessage("The length of the name can't be higher than 50 characters!"),
+    (0, express_validator_1.body)("description")
+        .isString()
+        .withMessage("The description of the restaurant must be a string!")
+        .notEmpty()
+        .withMessage("The field 'description' can't be empty!")
+        .isLength({ max: 200 })
+        .withMessage("The length of the description can't be higher than 200 characters!"),
+    (0, express_validator_1.body)("address")
+        .isString()
+        .withMessage("The address of the restaurant must be a string!")
+        .notEmpty()
+        .withMessage("The field 'address' can't be empty!")
+        .isLength({ max: 100 })
+        .withMessage("The length of the address can't be higher than 100 characters!"),
+    (0, express_validator_1.body)("phone")
+        .isString()
+        .withMessage("The phone number must be a string!")
+        .notEmpty()
+        .withMessage("The field 'phone' can't be empty!")
+        .matches(/^[\d\s\-()+]+$/)
+        .withMessage("The phone number format is invalid!")
+        .isLength({ min: 8, max: 20 })
+        .withMessage("The phone number must be between 8 and 20 characters!"),
+    (0, express_validator_1.body)("isActive")
+        .isBoolean()
+        .withMessage("The field 'isActive' must be a boolean!")
+        .notEmpty()
+        .withMessage("The field 'isActive' can't be empty!"),
+];
+exports.validateCreateCategory = [
+    (0, express_validator_1.body)("name")
+        .isString()
+        .withMessage("The category name must be a string!")
+        .notEmpty()
+        .withMessage("The field 'name' can't be empty!")
+        .isLength({ max: 50 })
+        .withMessage("The length of the category name can't be higher than 50 characters!")
+        .trim()
+        .escape(),
+    (0, express_validator_1.body)("isActive")
+        .isBoolean()
+        .withMessage("The field 'isActive' must be a boolean!")
+        .notEmpty()
+        .withMessage("The field 'isActive' can't be empty!"),
 ];

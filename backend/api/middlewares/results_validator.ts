@@ -1,7 +1,7 @@
 const { query, validationResult } = require("express-validator");
 import { Request, Response, NextFunction } from "express";
 
-export const vaidate_Results = async (
+export const validate_Results = async (
   req: Request,
   res: Response,
   next: NextFunction

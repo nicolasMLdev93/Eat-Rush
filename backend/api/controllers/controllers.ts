@@ -79,7 +79,7 @@ exports.loginUser = async (req: Request, res: Response): Promise<void> => {
           email: result.email,
           role: result.role,
         },
-        process.env.JWT_SECRET || "secret"
+        process.env.JWT_SECRET || "secret",
         { expiresIn: "1h" }
       );
       res.status(200).json({
@@ -103,26 +103,6 @@ exports.createProduct = async (req: Request, res: Response): Promise<void> => {
   const { name, description, price, isAvailable, categoryId, restaurantId } =
     req.body;
   try {
-    const restaurant = await User.findOne({
-      where: { restaurantId: restaurantId },
-    });
-    if (!restaurant) {
-      res.status(404).json({
-        error: "Restaurant of the new product not found!",
-        success: false,
-      });
-      return;
-    }
-    const category = await Category.findOne({
-      where: { categoryId: categoryId },
-    });
-    if (!category) {
-      res.status(404).json({
-        error: "Category of the new product not found!",
-        success: false,
-      });
-      return;
-    }
     await Product.create({
       name: name,
       description: description,
@@ -133,7 +113,58 @@ exports.createProduct = async (req: Request, res: Response): Promise<void> => {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-    res.status(200).json({ Success: "New product created!", success: true });
+    res.status(201).json({
+      success: true,
+      message: "New product created successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+// Register new Restaurant //
+exports.createRestaurant = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { name, description, address, phone, isActive } = req.body;
+  try {
+    await Restaurant.create({
+      name: name,
+      description: description,
+      address: address,
+      phone: phone,
+      isActive: isActive,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    res.status(201).json({
+      success: true,
+      message: "New restaurant created successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+
+// Register new Restaurant //
+exports.createCategory = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { name, isActive } = req.body;
+  try {
+    await Category.create({
+      name: name,
+      isActive: isActive,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+    res.status(201).json({
+      success: true,
+      message: "New category created successfully",
+    });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error", success: false });
   }

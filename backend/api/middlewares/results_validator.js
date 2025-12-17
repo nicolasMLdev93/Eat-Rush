@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.vaidate_Results = void 0;
+exports.validate_Results = void 0;
 const { query, validationResult } = require("express-validator");
-const vaidate_Results = async (req, res, next) => {
+const validate_Results = async (req, res, next) => {
     try {
         const errors = await validationResult(req);
         if (!errors.isEmpty()) {
@@ -26,4 +26,4 @@ const vaidate_Results = async (req, res, next) => {
         res.status(500).json({ error: "Internal Server Error", success: false });
     }
 };
-exports.vaidate_Results = vaidate_Results;
+exports.validate_Results = validate_Results;

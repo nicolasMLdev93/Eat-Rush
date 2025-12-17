@@ -6,14 +6,18 @@ const {
   validateCreateProduct,
   validateRegisterUser,
   validateLoginUser,
+  validateCreateRestaurant,
+  validateCreateCategory,
 } = require("../middlewares/chain_validators");
 // Results validators //
-const { vaidate_Results } = require("../middlewares/results_validator");
+const { validate_Results } = require("../middlewares/results_validator");
 // Existence validators //
 const {
   validateExistantUser_register,
   validateExistantUser_login,
-  validateAdminToken,
+  validateAdminToken_createProduct,
+  validateAdminToken_createRestaurant,
+  validateAdminToken_createCategory,
 } = require("../middlewares/existence_validators");
 // Controllers//
 const {
@@ -23,6 +27,8 @@ const {
   registerUser,
   loginUser,
   createProduct,
+  createRestaurant,
+  createCategory,
 } = require("../controllers/controllers");
 
 // Basic getters //
@@ -35,18 +41,34 @@ router.get("/categories", getCategories);
 
 // Create products, restaurants and categories //
 router.post(
-  "/products",
+  "/product",
   validateCreateProduct,
-  vaidate_Results,
-  validateAdminToken,
+  validate_Results,
+  validateAdminToken_createProduct,
   createProduct
+);
+
+router.post(
+  "/restaurant",
+  validateCreateRestaurant,
+  validate_Results,
+  validateAdminToken_createRestaurant,
+  createRestaurant
+);
+
+router.post(
+  "/category",
+  validateCreateCategory,
+  validate_Results,
+  validateAdminToken_createCategory,
+  createCategory
 );
 
 // Create users //
 router.post(
   "/register",
   validateRegisterUser,
-  vaidate_Results,
+  validate_Results,
   validateExistantUser_register,
   registerUser
 );
@@ -55,7 +77,7 @@ router.post(
 router.post(
   "/login",
   validateLoginUser,
-  vaidate_Results,
+  validate_Results,
   validateExistantUser_login,
   loginUser
 );

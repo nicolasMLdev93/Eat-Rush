@@ -119,3 +119,63 @@ export const validateLoginUser: ValidationChain[] = [
       "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character!"
     ),
 ];
+
+export const validateCreateRestaurant: ValidationChain[] = [
+  body("name")
+    .isString()
+    .withMessage("The name of the restaurant must be a string!")
+    .notEmpty()
+    .withMessage("The field 'name' can't be empty!")
+    .isLength({ max: 50 })
+    .withMessage("The length of the name can't be higher than 50 characters!"),
+  body("description")
+    .isString()
+    .withMessage("The description of the restaurant must be a string!")
+    .notEmpty()
+    .withMessage("The field 'description' can't be empty!")
+    .isLength({ max: 200 })
+    .withMessage(
+      "The length of the description can't be higher than 200 characters!"
+    ),
+  body("address")
+    .isString()
+    .withMessage("The address of the restaurant must be a string!")
+    .notEmpty()
+    .withMessage("The field 'address' can't be empty!")
+    .isLength({ max: 100 })
+    .withMessage(
+      "The length of the address can't be higher than 100 characters!"
+    ),
+  body("phone")
+    .isString()
+    .withMessage("The phone number must be a string!")
+    .notEmpty()
+    .withMessage("The field 'phone' can't be empty!")
+    .matches(/^[\d\s\-()+]+$/)
+    .withMessage("The phone number format is invalid!")
+    .isLength({ min: 8, max: 20 })
+    .withMessage("The phone number must be between 8 and 20 characters!"),
+  body("isActive")
+    .isBoolean()
+    .withMessage("The field 'isActive' must be a boolean!")
+    .notEmpty()
+    .withMessage("The field 'isActive' can't be empty!"),
+];
+
+
+export const validateCreateCategory: ValidationChain[] = [
+  body("name")
+    .isString()
+    .withMessage("The category name must be a string!")
+    .notEmpty()
+    .withMessage("The field 'name' can't be empty!")
+    .isLength({ max: 50 })
+    .withMessage("The length of the category name can't be higher than 50 characters!")
+    .trim()
+    .escape(),
+  body("isActive")
+    .isBoolean()
+    .withMessage("The field 'isActive' must be a boolean!")
+    .notEmpty()
+    .withMessage("The field 'isActive' can't be empty!"),
+];
