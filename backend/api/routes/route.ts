@@ -8,6 +8,7 @@ const {
   validateLoginUser,
   validateCreateRestaurant,
   validateCreateCategory,
+  validateSoftDelete,
 } = require("../middlewares/chain_validators");
 // Results validators //
 const { validate_Results } = require("../middlewares/results_validator");
@@ -15,10 +16,17 @@ const { validate_Results } = require("../middlewares/results_validator");
 const {
   validateExistantUser_register,
   validateExistantUser_login,
-  validateAdminToken_createProduct,
-  validateAdminToken_createRestaurant,
-  validateAdminToken_createCategory,
+  validateExistantCreateCategory,
+  validateExistantCreateRestaurant,
+  validateExistantCreateProduct,
+  validateExistantDeleteRest,
+  validateExistantDeleteCat,
+  validateExistantDeleteProd,
 } = require("../middlewares/existence_validators");
+
+// Validate admin with token
+const { validateAdminToken } = require("../middlewares/validate_admin");
+
 // Controllers//
 const {
   getProducts,
@@ -28,7 +36,7 @@ const {
   loginUser,
   createProduct,
   createRestaurant,
-  createCategory,
+  createCategory,deleteRestaurant,deleteProduct,deleteCategory
 } = require("../controllers/controllers");
 
 // Basic getters //
@@ -44,7 +52,8 @@ router.post(
   "/product",
   validateCreateProduct,
   validate_Results,
-  validateAdminToken_createProduct,
+  validateExistantCreateProduct,
+  validateAdminToken,
   createProduct
 );
 
@@ -52,7 +61,8 @@ router.post(
   "/restaurant",
   validateCreateRestaurant,
   validate_Results,
-  validateAdminToken_createRestaurant,
+  validateExistantCreateRestaurant,
+  validateAdminToken,
   createRestaurant
 );
 
@@ -60,10 +70,12 @@ router.post(
   "/category",
   validateCreateCategory,
   validate_Results,
-  validateAdminToken_createCategory,
+  validateExistantCreateCategory,
+  validateAdminToken,
   createCategory
 );
 
+// Create new user and login //
 // Create users //
 router.post(
   "/register",
@@ -80,6 +92,31 @@ router.post(
   validate_Results,
   validateExistantUser_login,
   loginUser
+);
+
+// Delete products, categories and restaurants (with soft delete)//
+router.put(
+  "/product",
+  validateSoftDelete,
+  validate_Results,
+  validateAdminToken,
+  validateExistantDeleteProd,deleteProduct
+);
+
+router.put(
+  "/restaurant",
+  validateSoftDelete,
+  validate_Results,
+  validateAdminToken,
+  validateExistantDeleteRest,deleteRestaurant
+);
+
+router.put(
+  "/category",
+  validateSoftDelete,
+  validate_Results,
+  validateAdminToken,
+  validateExistantDeleteCat,deleteCategory
 );
 
 module.exports = router;

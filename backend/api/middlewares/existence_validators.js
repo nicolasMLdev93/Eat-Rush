@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateAdminToken_createCategory = exports.validateAdminToken_createRestaurant = exports.validateAdminToken_createProduct = exports.validateExistantUser_register = exports.validateExistantUser_login = void 0;
+exports.validateExistantDeleteRest = exports.validateExistantDeleteCat = exports.validateExistantDeleteProd = exports.validateExistantCreateCategory = exports.validateExistantCreateRestaurant = exports.validateExistantCreateProduct = exports.validateExistantUser_register = exports.validateExistantUser_login = void 0;
 const { Product, Restaurant, Category, User } = require("../../models");
 const jwt = require("jsonwebtoken");
 const validateExistantUser_login = async (req, res, next) => {
@@ -43,37 +43,9 @@ const validateExistantUser_register = async (req, res, next) => {
     }
 };
 exports.validateExistantUser_register = validateExistantUser_register;
-const validateAdminToken_createProduct = async (req, res, next) => {
+const validateExistantCreateProduct = async (req, res, next) => {
     const { categoryId, restaurantId } = req.body;
     try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({
-                error: "No token provided",
-                success: false,
-            });
-        }
-        const parts = authHeader.split(" ");
-        if (parts.length !== 2) {
-            return res.status(401).json({
-                error: "Token error",
-                success: false,
-            });
-        }
-        const [scheme, token] = parts;
-        if (!/^Bearer$/i.test(scheme)) {
-            return res.status(401).json({
-                error: "Token malformed",
-                success: false,
-            });
-        }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret");
-        if (decoded.role !== "admin") {
-            return res.status(403).json({
-                error: "Access only for Admin",
-                success: false,
-            });
-        }
         const category = await Category.findOne({
             where: { id: categoryId },
         });
@@ -97,56 +69,16 @@ const validateAdminToken_createProduct = async (req, res, next) => {
         next();
     }
     catch (error) {
-        if (error.name === "TokenExpiredError") {
-            return res.status(401).json({
-                error: "Expired token",
-                success: false,
-            });
-        }
-        if (error.name === "JsonWebTokenError") {
-            return res.status(401).json({
-                error: "Invalid token",
-                success: false,
-            });
-        }
         return res.status(500).json({
             error: "Internal Server Error",
             success: false,
         });
     }
 };
-exports.validateAdminToken_createProduct = validateAdminToken_createProduct;
-const validateAdminToken_createRestaurant = async (req, res, next) => {
+exports.validateExistantCreateProduct = validateExistantCreateProduct;
+const validateExistantCreateRestaurant = async (req, res, next) => {
     const { name } = req.body;
     try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({
-                error: "No token provided",
-                success: false,
-            });
-        }
-        const parts = authHeader.split(" ");
-        if (parts.length !== 2) {
-            return res.status(401).json({
-                error: "Token error",
-                success: false,
-            });
-        }
-        const [scheme, token] = parts;
-        if (!/^Bearer$/i.test(scheme)) {
-            return res.status(401).json({
-                error: "Token malformed",
-                success: false,
-            });
-        }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret");
-        if (decoded.role !== "admin") {
-            return res.status(403).json({
-                error: "Access only for Admin",
-                success: false,
-            });
-        }
         const restaurant = await Restaurant.findOne({
             where: { name: name },
         });
@@ -160,56 +92,16 @@ const validateAdminToken_createRestaurant = async (req, res, next) => {
         next();
     }
     catch (error) {
-        if (error.name === "TokenExpiredError") {
-            return res.status(401).json({
-                error: "Expired token",
-                success: false,
-            });
-        }
-        if (error.name === "JsonWebTokenError") {
-            return res.status(401).json({
-                error: "Invalid token",
-                success: false,
-            });
-        }
         return res.status(500).json({
             error: "Internal Server Error",
             success: false,
         });
     }
 };
-exports.validateAdminToken_createRestaurant = validateAdminToken_createRestaurant;
-const validateAdminToken_createCategory = async (req, res, next) => {
+exports.validateExistantCreateRestaurant = validateExistantCreateRestaurant;
+const validateExistantCreateCategory = async (req, res, next) => {
     const { name } = req.body;
     try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader) {
-            return res.status(401).json({
-                error: "No token provided",
-                success: false,
-            });
-        }
-        const parts = authHeader.split(" ");
-        if (parts.length !== 2) {
-            return res.status(401).json({
-                error: "Token error",
-                success: false,
-            });
-        }
-        const [scheme, token] = parts;
-        if (!/^Bearer$/i.test(scheme)) {
-            return res.status(401).json({
-                error: "Token malformed",
-                success: false,
-            });
-        }
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret");
-        if (decoded.role !== "admin") {
-            return res.status(403).json({
-                error: "Access only for Admin",
-                success: false,
-            });
-        }
         const category = await Category.findOne({
             where: { name: name },
         });
@@ -223,22 +115,85 @@ const validateAdminToken_createCategory = async (req, res, next) => {
         next();
     }
     catch (error) {
-        if (error.name === "TokenExpiredError") {
-            return res.status(401).json({
-                error: "Expired token",
-                success: false,
-            });
-        }
-        if (error.name === "JsonWebTokenError") {
-            return res.status(401).json({
-                error: "Invalid token",
-                success: false,
-            });
-        }
         return res.status(500).json({
             error: "Internal Server Error",
             success: false,
         });
     }
 };
-exports.validateAdminToken_createCategory = validateAdminToken_createCategory;
+exports.validateExistantCreateCategory = validateExistantCreateCategory;
+const validateExistantDeleteProd = async (req, res, next) => {
+    const { id } = req.body;
+    try {
+        const product = await Product.findOne({
+            where: { id: id },
+        });
+        if (!product) {
+            res.status(404).json({
+                error: "A product with that id not exists!",
+                success: false,
+            });
+            return;
+        }
+        else {
+            next();
+        }
+    }
+    catch (error) {
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.validateExistantDeleteProd = validateExistantDeleteProd;
+const validateExistantDeleteCat = async (req, res, next) => {
+    const { id } = req.body;
+    try {
+        const category = await Category.findOne({
+            where: { id: id },
+        });
+        if (!category) {
+            res.status(404).json({
+                error: "A category with that id not exists!",
+                success: false,
+            });
+            return;
+        }
+        else {
+            next();
+        }
+    }
+    catch (error) {
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.validateExistantDeleteCat = validateExistantDeleteCat;
+const validateExistantDeleteRest = async (req, res, next) => {
+    try {
+        const { id } = req.body;
+        const restaurant = await Restaurant.findOne({
+            where: { id: id },
+        });
+        if (!restaurant) {
+            res.status(404).json({
+                error: "A restaurant with that id not exists!",
+                success: false,
+            });
+            return;
+        }
+        else {
+            next();
+        }
+    }
+    catch (error) {
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.validateExistantDeleteRest = validateExistantDeleteRest;

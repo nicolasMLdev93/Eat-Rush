@@ -147,12 +147,8 @@ exports.createRestaurant = async (
   }
 };
 
-
 // Register new Restaurant //
-exports.createCategory = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+exports.createCategory = async (req: Request, res: Response): Promise<void> => {
   const { name, isActive } = req.body;
   try {
     await Category.create({
@@ -164,6 +160,69 @@ exports.createCategory = async (
     res.status(201).json({
       success: true,
       message: "New category created successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+// Delete product (soft delete)
+exports.deleteProduct = async (req: Request, res: Response) => {
+  const { id } = req.body;
+  try {
+    await Product.update(
+      { isAvailable: false },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+    res.status(201).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+// Delete category (soft delete)
+exports.deleteCategory = async (req: Request, res: Response) => {
+  const { id } = req.body;
+  try {
+    await Category.update(
+      { isActive: false },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+    res.status(201).json({
+      success: true,
+      message: "Category deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+// Delete restaurant (soft delete)
+exports.deleteRestaurant = async (req: Request, res: Response) => {
+  const { id } = req.body;
+  try {
+    await Restaurant.update(
+      { isActive: false },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+    res.status(201).json({
+      success: true,
+      message: "Restaurant deleted successfully",
     });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error", success: false });

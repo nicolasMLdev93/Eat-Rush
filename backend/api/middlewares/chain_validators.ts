@@ -162,7 +162,6 @@ export const validateCreateRestaurant: ValidationChain[] = [
     .withMessage("The field 'isActive' can't be empty!"),
 ];
 
-
 export const validateCreateCategory: ValidationChain[] = [
   body("name")
     .isString()
@@ -170,7 +169,9 @@ export const validateCreateCategory: ValidationChain[] = [
     .notEmpty()
     .withMessage("The field 'name' can't be empty!")
     .isLength({ max: 50 })
-    .withMessage("The length of the category name can't be higher than 50 characters!")
+    .withMessage(
+      "The length of the category name can't be higher than 50 characters!"
+    )
     .trim()
     .escape(),
   body("isActive")
@@ -178,4 +179,12 @@ export const validateCreateCategory: ValidationChain[] = [
     .withMessage("The field 'isActive' must be a boolean!")
     .notEmpty()
     .withMessage("The field 'isActive' can't be empty!"),
+];
+
+export const validateSoftDelete: ValidationChain[] = [
+  body("id")
+    .notEmpty()
+    .withMessage("The field 'Id' can´t be empty!")
+    .isInt()
+    .withMessage("The field 'Id' must be an integer!"),
 ];

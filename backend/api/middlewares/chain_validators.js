@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateCreateCategory = exports.validateCreateRestaurant = exports.validateLoginUser = exports.validateRegisterUser = exports.validateCreateProduct = void 0;
+exports.validateSoftDelete = exports.validateCreateCategory = exports.validateCreateRestaurant = exports.validateLoginUser = exports.validateRegisterUser = exports.validateCreateProduct = void 0;
 const express_validator_1 = require("express-validator");
 exports.validateCreateProduct = [
     (0, express_validator_1.body)("name")
@@ -165,4 +165,11 @@ exports.validateCreateCategory = [
         .withMessage("The field 'isActive' must be a boolean!")
         .notEmpty()
         .withMessage("The field 'isActive' can't be empty!"),
+];
+exports.validateSoftDelete = [
+    (0, express_validator_1.body)("id")
+        .notEmpty()
+        .withMessage("The field 'Id' can´t be empty!")
+        .isInt()
+        .withMessage("The field 'Id' must be an integer!"),
 ];
