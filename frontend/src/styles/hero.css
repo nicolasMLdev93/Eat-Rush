@@ -1,0 +1,445 @@
+
+
+.hero_container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 0 10px;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333333;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.see-all-btn {
+  background: transparent;
+  border: none;
+  color: #D70F64;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.see-all-btn:hover {
+  background-color: rgba(215, 15, 100, 0.1);
+}
+
+/* Carrusel de categorías */
+.categories-swiper {
+  padding: 10px 5px 30px;
+  margin: -10px -5px;
+}
+
+.categories-swiper .swiper-button-prev,
+.categories-swiper .swiper-button-next {
+  background-color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  top: 35%;
+}
+
+.categories-swiper .swiper-button-prev:after,
+.categories-swiper .swiper-button-next:after {
+  font-size: 14px;
+  color: #333333;
+  font-weight: bold;
+}
+
+.category-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  height: 100px;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-color: #D70F64;
+}
+
+.category-icon {
+  font-size: 2.2rem;
+  background: linear-gradient(135deg, #D70F64 0%, #FF8000 100%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.category-info {
+  flex: 1;
+}
+
+.category-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333333;
+  margin: 0 0 5px 0;
+}
+
+.category-count {
+  font-size: 0.85rem;
+  color: #666666;
+  margin: 0;
+}
+
+/* Carrusel de restaurantes */
+.restaurants-section {
+  margin-top: 40px;
+}
+
+.restaurants-swiper {
+  padding: 10px 5px 50px;
+  margin: -10px -5px;
+}
+
+.restaurants-swiper .swiper-button-prev,
+.restaurants-swiper .swiper-button-next {
+  background-color: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+  top: 40%;
+}
+
+.restaurants-swiper .swiper-button-prev:after,
+.restaurants-swiper .swiper-button-next:after {
+  font-size: 16px;
+  color: #333333;
+  font-weight: bold;
+}
+
+.restaurants-swiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background-color: #ddd;
+  opacity: 1;
+}
+
+.restaurants-swiper .swiper-pagination-bullet-active {
+  background-color: #D70F64;
+  transform: scale(1.2);
+}
+
+.restaurant-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  height: 100%;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.restaurant-image-container {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.restaurant-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.restaurant-card:hover .restaurant-image {
+  transform: scale(1.05);
+}
+
+.discount-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: linear-gradient(135deg, #D70F64 0%, #FF8000 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.favorite-btn:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.restaurant-info {
+  padding: 20px;
+}
+
+.restaurant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.restaurant-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #333333;
+  margin: 0;
+  flex: 1;
+}
+
+.rating-badge {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+  padding: 4px 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.rating-star {
+  font-size: 0.9rem;
+}
+
+.restaurant-category {
+  color: #666666;
+  font-size: 0.9rem;
+  margin: 0 0 15px 0;
+}
+
+.restaurant-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delivery-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666666;
+  font-size: 0.9rem;
+}
+
+.delivery-icon {
+  font-size: 1rem;
+}
+
+.order-btn {
+  background: linear-gradient(135deg, #D70F64 0%, #FF8000 100%);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.order-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(215, 15, 100, 0.3);
+}
+
+/* Banner promocional */
+.promo-banner {
+  background: linear-gradient(135deg, #D70F64 0%, #FF8000 100%);
+  border-radius: 24px;
+  padding: 30px;
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.promo-banner::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.promo-content {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.promo-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.promo-description {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin: 0 0 20px 0;
+}
+
+.promo-code {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.promo-btn {
+  background: white;
+  color: #D70F64;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.promo-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.promo-image {
+  position: relative;
+  z-index: 1;
+}
+
+.promo-icon {
+  font-size: 5rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero_container {
+    padding: 15px;
+  }
+  
+  .section-title {
+    font-size: 1.3rem;
+  }
+  
+  .category-card {
+    padding: 15px;
+    height: 90px;
+  }
+  
+  .category-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.8rem;
+  }
+  
+  .restaurant-image-container {
+    height: 160px;
+  }
+  
+  .promo-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+  
+  .promo-title {
+    font-size: 1.5rem;
+  }
+  
+  .promo-icon {
+    font-size: 4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero_container {
+    padding: 10px;
+  }
+  
+  .category-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px 10px;
+    height: auto;
+  }
+  
+  .category-info {
+    text-align: center;
+  }
+  
+  .restaurants-swiper .swiper-button-prev,
+  .restaurants-swiper .swiper-button-next,
+  .categories-swiper .swiper-button-prev,
+  .categories-swiper .swiper-button-next {
+    display: none;
+  }
+}
