@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateExistanProd_byRest = exports.validateExistanProd_byCat = exports.validateExistanProd_byId = exports.validateExistantDeleteRest = exports.validateExistantDeleteCat = exports.validateExistantDeleteProd = exports.validateExistantCreateCategory = exports.validateExistantCreateRestaurant = exports.validateExistantCreateProduct = exports.validateExistantUser_register = exports.validateExistantUser_login = void 0;
+exports.validateExistantCat_byName = exports.validateExistanCat_byId = exports.validateExistantRes_byName = exports.validateExistanRest_byId = exports.validateExistanProd_byRest = exports.validateExistanProd_byCat = exports.validateExistanProd_byId = exports.validateExistantDeleteRest = exports.validateExistantDeleteCat = exports.validateExistantDeleteProd = exports.validateExistantCreateCategory = exports.validateExistantCreateRestaurant = exports.validateExistantCreateProduct = exports.validateExistantUser_register = exports.validateExistantUser_login = void 0;
 const { Product, Restaurant, Category, User } = require("../../models");
 const jwt = require("jsonwebtoken");
 const validateExistantUser_login = async (req, res, next) => {
@@ -272,3 +272,103 @@ const validateExistanProd_byRest = async (req, res, next) => {
     }
 };
 exports.validateExistanProd_byRest = validateExistanProd_byRest;
+const validateExistanRest_byId = async (req, res, next) => {
+    const { id } = req.params;
+    try {
+        const restaurant = await Restaurant.findOne({
+            where: { id: id },
+        });
+        if (!restaurant) {
+            res.status(404).json({
+                error: "A restaurant with that id not exists!",
+                success: false,
+            });
+            return;
+        }
+        else {
+            next();
+        }
+    }
+    catch (error) {
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.validateExistanRest_byId = validateExistanRest_byId;
+const validateExistantRes_byName = async (req, res, next) => {
+    const { nameSlug } = req.params;
+    try {
+        const restaurant = await Restaurant.findOne({
+            where: { name: nameSlug },
+        });
+        if (!restaurant) {
+            res.status(404).json({
+                error: "A restaurant with that name not exists!",
+                success: false,
+            });
+            return;
+        }
+        else {
+            next();
+        }
+    }
+    catch (error) {
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.validateExistantRes_byName = validateExistantRes_byName;
+const validateExistanCat_byId = async (req, res, next) => {
+    const { id } = req.params;
+    try {
+        const category = await Category.findOne({
+            where: { id: id },
+        });
+        if (!category) {
+            res.status(404).json({
+                error: "A category with that id not exists!",
+                success: false,
+            });
+            return;
+        }
+        else {
+            next();
+        }
+    }
+    catch (error) {
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.validateExistanCat_byId = validateExistanCat_byId;
+const validateExistantCat_byName = async (req, res, next) => {
+    const { nameSlug } = req.params;
+    try {
+        const category = await Category.findOne({
+            where: { name: nameSlug },
+        });
+        if (!category) {
+            res.status(404).json({
+                error: "A category with that name not exists!",
+                success: false,
+            });
+            return;
+        }
+        else {
+            next();
+        }
+    }
+    catch (error) {
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.validateExistantCat_byName = validateExistantCat_byName;

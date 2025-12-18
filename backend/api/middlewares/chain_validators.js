@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateGetProduct_Rest = exports.validateGetProduct_Cat = exports.validateGetProduct_Id = exports.validateSoftDelete = exports.validateCreateCategory = exports.validateCreateRestaurant = exports.validateLoginUser = exports.validateRegisterUser = exports.validateCreateProduct = void 0;
+exports.validateGetCategory_Name = exports.validateGetCategory_Id = exports.validateGetRestaurant_Name = exports.validateGetRestaurant_Id = exports.validateGetProduct_Rest = exports.validateGetProduct_Cat = exports.validateGetProduct_Id = exports.validateSoftDelete = exports.validateCreateCategory = exports.validateCreateRestaurant = exports.validateLoginUser = exports.validateRegisterUser = exports.validateCreateProduct = void 0;
 const express_validator_1 = require("express-validator");
 exports.validateCreateProduct = [
     (0, express_validator_1.body)("name")
@@ -193,4 +193,32 @@ exports.validateGetProduct_Rest = [
         .withMessage("The field 'restaurantId' can´t be empty!")
         .isNumeric()
         .withMessage("The field 'restaurantId' must be numeric!"),
+];
+exports.validateGetRestaurant_Id = [
+    (0, express_validator_1.param)("id")
+        .notEmpty()
+        .withMessage("The field 'Id' can´t be empty!")
+        .isNumeric()
+        .withMessage("The field 'Id' must be numeric!"),
+];
+exports.validateGetRestaurant_Name = [
+    (0, express_validator_1.param)("nameSlug")
+        .notEmpty()
+        .withMessage("The field 'nameSlug' can´t be empty!")
+        .isString()
+        .withMessage("The field 'nameSlug' must be a string!"),
+];
+exports.validateGetCategory_Id = [
+    (0, express_validator_1.param)("id")
+        .notEmpty()
+        .withMessage("The field 'Id' can´t be empty!")
+        .isNumeric()
+        .withMessage("The field 'Id' must be numeric!"),
+];
+exports.validateGetCategory_Name = [
+    (0, express_validator_1.param)("nameSlug")
+        .notEmpty()
+        .withMessage("The field 'nameSlug' can´t be empty!")
+        .isString()
+        .withMessage("The field 'nameSlug' must be a string!"),
 ];

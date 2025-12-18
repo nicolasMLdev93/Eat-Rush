@@ -212,3 +212,35 @@ export const validateGetProduct_Rest: ValidationChain[] = [
     .isNumeric()
     .withMessage("The field 'restaurantId' must be numeric!"),
 ];
+
+export const validateGetRestaurant_Id: ValidationChain[] = [
+  param("id")
+    .notEmpty()
+    .withMessage("The field 'Id' can´t be empty!")
+    .isNumeric()
+    .withMessage("The field 'Id' must be numeric!"),
+];
+
+export const validateGetRestaurant_Name: ValidationChain[] = [
+  param("nameSlug")
+    .notEmpty()
+    .withMessage("The field 'nameSlug' can´t be empty!")
+    .isString()
+    .withMessage("The field 'nameSlug' must be a string!"),
+];
+
+export const validateGetCategory_Id: ValidationChain[] = [
+  param("id")
+    .notEmpty()
+    .withMessage("The field 'Id' can´t be empty!")
+    .isNumeric()
+    .withMessage("The field 'Id' must be numeric!"),
+];
+
+export const validateGetCategory_Name: ValidationChain[] = [
+  param("nameSlug")
+    .notEmpty()
+    .withMessage("The field 'nameSlug' can´t be empty!")
+    .isString()
+    .withMessage("The field 'nameSlug' must be a string!"),
+];

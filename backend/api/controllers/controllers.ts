@@ -308,3 +308,67 @@ exports.getProd_byRest = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal Server Error", success: false });
   }
 };
+
+exports.getRest_byId = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const restaurant = await Restaurant.findOne({
+      where: {
+        id: id,
+      },
+    });
+    res.status(201).json({
+      success: true,
+      restaurant: restaurant,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+exports.getRest_byName = async (req: Request, res: Response) => {
+  const { nameSlug } = req.params;
+  try {
+    const restaurant = await Restaurant.findOne({
+      where: { name: nameSlug },
+    });
+    res.status(201).json({
+      success: true,
+      restaurant: restaurant,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+exports.getCategory_byId = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const category = await Category.findOne({
+      where: {
+        id: id,
+      },
+    });
+    res.status(201).json({
+      success: true,
+      category: category,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+exports.getCat_byName = async (req: Request, res: Response) => {
+  const { nameSlug } = req.params;
+  try {
+    const category = await Category.findOne({
+      where: { name: nameSlug },
+    });
+    res.status(201).json({
+      success: true,
+      category: category,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};

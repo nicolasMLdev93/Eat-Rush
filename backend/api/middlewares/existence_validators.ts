@@ -296,3 +296,111 @@ export const validateExistanProd_byRest = async (
     });
   }
 };
+
+export const validateExistanRest_byId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  try {
+    const restaurant = await Restaurant.findOne({
+      where: { id: id },
+    });
+    if (!restaurant) {
+      res.status(404).json({
+        error: "A restaurant with that id not exists!",
+        success: false,
+      });
+      return;
+    } else {
+      next();
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+export const validateExistantRes_byName = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { nameSlug } = req.params;
+  try {
+    const restaurant = await Restaurant.findOne({
+      where: { name: nameSlug },
+    });
+    if (!restaurant) {
+      res.status(404).json({
+        error: "A restaurant with that name not exists!",
+        success: false,
+      });
+      return;
+    } else {
+      next();
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+export const validateExistanCat_byId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req.params;
+  try {
+    const category = await Category.findOne({
+      where: { id: id },
+    });
+    if (!category) {
+      res.status(404).json({
+        error: "A category with that id not exists!",
+        success: false,
+      });
+      return;
+    } else {
+      next();
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+export const validateExistantCat_byName = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { nameSlug } = req.params;
+  try {
+    const category = await Category.findOne({
+      where: { name: nameSlug },
+    });
+    if (!category) {
+      res.status(404).json({
+        error: "A category with that name not exists!",
+        success: false,
+      });
+      return;
+    } else {
+      next();
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
+  }
+};

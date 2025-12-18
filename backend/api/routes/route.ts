@@ -12,6 +12,10 @@ const {
   validateGetProduct_Id,
   validateGetProduct_Cat,
   validateGetProduct_Rest,
+  validateGetRestaurant_Id,
+  validateGetRestaurant_Name,
+  validateGetCategory_Id,
+  validateGetCategory_Name,
 } = require("../middlewares/chain_validators");
 // Results validators //
 const { validate_Results } = require("../middlewares/results_validator");
@@ -28,6 +32,10 @@ const {
   validateExistanProd_byId,
   validateExistanProd_byCat,
   validateExistanProd_byRest,
+  validateExistanRest_byId,
+  validateExistantRes_byName,
+  validateExistanCat_byId,
+  validateExistantCat_byName,
 } = require("../middlewares/existence_validators");
 
 // Validate admin with token
@@ -49,6 +57,10 @@ const {
   getProd_byId,
   getProd_byCat,
   getProd_byRest,
+  getRest_byId,
+  getRest_byName,
+  getCategory_byId,
+  getCat_byName,
 } = require("../controllers/controllers");
 
 // Basic getters //
@@ -157,6 +169,38 @@ router.get(
   validate_Results,
   validateExistanProd_byRest,
   getProd_byRest
+);
+
+router.get(
+  "/restaurant/:id",
+  validateGetRestaurant_Id,
+  validate_Results,
+  validateExistanRest_byId,
+  getRest_byId
+);
+
+router.get(
+  "/restaurant/name/:nameSlug",
+  validateGetRestaurant_Name,
+  validate_Results,
+  validateExistantRes_byName,
+  getRest_byName
+);
+
+router.get(
+  "/category/:id",
+  validateGetCategory_Id,
+  validate_Results,
+  validateExistanCat_byId,
+  getCategory_byId
+);
+
+router.get(
+  "/category/name/:nameSlug",
+  validateGetCategory_Name,
+  validate_Results,
+  validateExistantCat_byName,
+  getCat_byName
 );
 
 module.exports = router;
