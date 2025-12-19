@@ -16,7 +16,7 @@ const restaurants = [
     deliveryTime: "15-25 min",
     image:
       "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    discount: "20% OFF",
+     discount: "Envío gratis",
   },
   {
     id: 2,
@@ -36,7 +36,7 @@ const restaurants = [
     deliveryTime: "20-30 min",
     image:
       "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    discount: "2x1",
+     discount: "Envío gratis",
   },
   {
     id: 4,
@@ -46,7 +46,7 @@ const restaurants = [
     deliveryTime: "25-35 min",
     image:
       "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    discount: "15% OFF",
+     discount: "Envío gratis",
   },
   {
     id: 5,
@@ -56,7 +56,7 @@ const restaurants = [
     deliveryTime: "20-30 min",
     image:
       "https://images.unsplash.com/photo-1540420773420-3366772f4999?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    discount: "Combo saludable",
+     discount: "Envío gratis",
   },
 ];
 

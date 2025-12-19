@@ -1,0 +1,398 @@
+import React, { useState } from "react";
+import "../styles/payment.css";
+import Footer from "../components/footer";
+
+const Payment = () => {
+  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    zipCode: "",
+    deliveryInstructions: "",
+
+    cardNumber: "",
+    cardName: "",
+    expiryDate: "",
+    cvv: "",
+
+    saveInfo: false,
+    tip: 10,
+  });
+
+  const orderSummary = {
+    items: [
+      { name: "Classic Burger x2", price: 25.98 },
+      { name: "Papas Fritas", price: 5.99 },
+      { name: "Coca-Cola x3", price: 11.97 },
+    ],
+    subtotal: 43.94,
+    deliveryFee: 2.99,
+    tax: 3.51,
+    tip: 4.39,
+    total: 54.83,
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleCardNumberChange = (e) => {
+    let value = e.target.value.replace(/\s/g, "");
+    value = value.replace(/\D/g, "");
+    if (value.length > 16) value = value.slice(0, 16);
+
+    const formatted = value.replace(/(.{4})/g, "$1 ").trim();
+    setFormData({
+      ...formData,
+      cardNumber: formatted,
+    });
+  };
+
+  const handleExpiryDateChange = (e) => {
+    let value = e.target.value.replace(/\D/g, "");
+    if (value.length > 4) value = value.slice(0, 4);
+
+    if (value.length >= 2) {
+      value = value.slice(0, 2) + "/" + value.slice(2);
+    }
+
+    setFormData({
+      ...formData,
+      expiryDate: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Payment submitted:", formData);
+    alert("¡Pedido realizado con éxito!");
+  };
+
+  return (
+    <div className="payment-container">
+      <div className="payment-content">
+        {/* Header */}
+        <div className="payment-header">
+          <h1 className="payment-title">
+            <span className="payment-icon">💳</span>
+            Finalizar Compra
+          </h1>
+          <p className="payment-subtitle">
+            Completa tu información para recibir tu pedido
+          </p>
+        </div>
+
+        {/* Formulario principal */}
+        <div className="payment-form-container">
+          <form onSubmit={handleSubmit} className="payment-form">
+            {/* Información de envío */}
+            <section className="form-section">
+              <h2 className="section-title">
+                <span className="section-icon">📍</span>
+                Información de Envío
+              </h2>
+
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Nombre completo *</label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    placeholder="Juan Pérez"
+                    required
+                    style={{ width: "90%" }}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Correo electrónico *</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="correo@ejemplo.com"
+                    required
+                    style={{ width: "90%" }}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Teléfono *</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+1 (555) 123-4567"
+                    required
+                    style={{ width: "90%" }}
+                  />
+                </div>
+
+                <div className="form-group full-width">
+                  <label>Dirección de entrega *</label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    placeholder="Calle Principal #123, Colonia"
+                    required
+                    style={{ width: "90%" }}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Ciudad *</label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    placeholder="Ciudad"
+                    required
+                    style={{ width: "90%" }}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Código Postal *</label>
+                  <input
+                    type="text"
+                    name="zipCode"
+                    value={formData.zipCode}
+                    onChange={handleChange}
+                    placeholder="12345"
+                    required
+                    style={{ width: "90%" }}
+                  />
+                </div>
+
+                <div className="form-group full-width">
+                  <label>Instrucciones de entrega (opcional)</label>
+                  <textarea
+                    name="deliveryInstructions"
+                    value={formData.deliveryInstructions}
+                    onChange={handleChange}
+                    placeholder="Ej: Llamar antes de llegar, dejar en la puerta, etc."
+                    rows="3"
+                    style={{ resize: "none", width: "90%" }}
+                  />
+                </div>
+              </div>
+            </section>
+
+            <section className="form-section">
+              <h2 className="section-title">
+                <span className="section-icon">💳</span>
+                Método de Pago
+              </h2>
+
+              <div className="payment-methods">
+                <button
+                  type="button"
+                  className={`payment-method-btn ${
+                    paymentMethod === "card" ? "active" : ""
+                  }`}
+                  onClick={() => setPaymentMethod("card")}
+                >
+                  💳 Tarjeta de crédito/débito
+                </button>
+                <button
+                  type="button"
+                  className={`payment-method-btn ${
+                    paymentMethod === "cash" ? "active" : ""
+                  }`}
+                  onClick={() => setPaymentMethod("cash")}
+                >
+                  💰 Efectivo al recibir
+                </button>
+              </div>
+
+              {paymentMethod === "card" && (
+                <div className="card-form">
+                  <div className="form-group">
+                    <label>Número de tarjeta *</label>
+                    <input
+                      type="text"
+                      name="cardNumber"
+                      value={formData.cardNumber}
+                      onChange={handleCardNumberChange}
+                      placeholder="1234 5678 9012 3456"
+                      maxLength="19"
+                      required
+                      style={{ width: "90%" }}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Nombre en la tarjeta *</label>
+                    <input
+                      type="text"
+                      name="cardName"
+                      value={formData.cardName}
+                      onChange={handleChange}
+                      placeholder="JUAN PEREZ"
+                      required
+                      style={{ width: "90%" }}
+                    />
+                  </div>
+
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label>Fecha de expiración *</label>
+                      <input
+                        type="text"
+                        name="expiryDate"
+                        value={formData.expiryDate}
+                        onChange={handleExpiryDateChange}
+                        placeholder="MM/YY"
+                        maxLength="5"
+                        required
+                        style={{ width: "90%" }}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>CVV</label>
+                      <input
+                        type="password"
+                        name="cvv"
+                        value={formData.cvv}
+                        onChange={handleChange}
+                        placeholder="123"
+                        maxLength="3"
+                        required
+                        style={{ width: "90%" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {paymentMethod === "cash" && (
+                <div className="cash-message">
+                  <p>💰 Pagarás en efectivo cuando recibas tu pedido.</p>
+                  <p className="small">
+                    Ten el dinero exacto preparado para una entrega más rápida.
+                  </p>
+                </div>
+              )}
+            </section>
+
+            <section className="form-section">
+              <h2 className="section-title">
+                <span className="section-icon">💝</span>
+                Propina para el repartidor
+              </h2>
+
+              <div className="tip-options">
+                {[0, 10, 15, 20].map((percent) => (
+                  <button
+                    key={percent}
+                    type="button"
+                    className={`tip-btn ${
+                      formData.tip === percent ? "active" : ""
+                    }`}
+                    onClick={() => setFormData({ ...formData, tip: percent })}
+                  >
+                    {percent === 0 ? "Sin propina" : `${percent}%`}
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            <section className="form-section">
+              <div className="checkbox-group">
+                <label className="checkbox">
+                  <input
+                    type="checkbox"
+                    name="saveInfo"
+                    checked={formData.saveInfo}
+                    onChange={handleChange}
+                  />
+                  <span>Guardar información para futuras compras</span>
+                </label>
+              </div>
+            </section>
+
+            <div className="form-actions">
+              <button type="submit" className="submit-btn">
+                Confirmar y Pagar
+              </button>
+              <button type="button" className="back-btn">
+                ← Volver al carrito
+              </button>
+            </div>
+          </form>
+          <div className="order-summary-sidebar">
+            <h2 className="summary-title">Resumen del Pedido</h2>
+
+            <div className="restaurant-info">
+              <h3>🍔 Burger Express</h3>
+              <p>Entrega estimada: 25-35 min</p>
+            </div>
+
+            <div className="items-list">
+              {orderSummary.items.map((item, index) => (
+                <div key={index} className="item-row">
+                  <span className="item-name">{item.name}</span>
+                  <span className="item-price">${item.price.toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="summary-details">
+              <div className="summary-row">
+                <span>Subtotal</span>
+                <span>${orderSummary.subtotal.toFixed(2)}</span>
+              </div>
+
+              <div className="summary-row">
+                <span>Costo de envío</span>
+                <span>${orderSummary.deliveryFee.toFixed(2)}</span>
+              </div>
+
+              <div className="summary-row">
+                <span>Impuestos</span>
+                <span>${orderSummary.tax.toFixed(2)}</span>
+              </div>
+
+              <div className="summary-row">
+                <span>Propina ({formData.tip}%)</span>
+                <span>${orderSummary.tip.toFixed(2)}</span>
+              </div>
+
+              <div className="summary-divider"></div>
+
+              <div className="summary-row total">
+                <span>Total</span>
+                <span>${orderSummary.total.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div className="security-info">
+              <p>🔒 Pago 100% seguro</p>
+              <p className="small">
+                Tu información está protegida con encriptación
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  );
+};
+
+export default Payment;
