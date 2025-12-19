@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react'
 import { Outlet } from "react-router-dom";
-import Navbar from "./app_bar";
+import ButtonAppBar from './navbar'
 
-const Layout = () => {
+function Layout() {
   return (
-    <>
-      <Navbar />
-      <Outlet />
-    </>
-  );
-};
+    <div>
+      <ButtonAppBar/>
+      <Outlet/>
+    </div>
+  )
+}
 
-export default Layout;
+export default Layout

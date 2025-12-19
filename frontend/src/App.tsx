@@ -1,30 +1,19 @@
-import { Routes, Route } from "react-router-dom";
-import About from "./pages/about";
-import Home from "./pages/home";
-import Restaurants from "./pages/restaurants";
-import Restaurant_detail from "./pages/restaurant_detail";
-import Categories from "./pages/categories";
-import Category_detail from "./pages/category_detail";
-import NotFound from "./pages/not_found";
-import Terms_privacy from "./pages/terms_privacy";
-import Layout from "./components/layout";
+import { useState } from "react";
 import "./App.css";
+import { Routes, Route } from "react-router-dom";
+import Layout from "./components/layout";
+import Home from "./pages/home";
+import About from "./pages/about";
 
-const App: React.FC = () => {
+function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout/>} >
+      <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="/restaurants" element={<Restaurants />} />
-        <Route path="/restaurants/:slug-:id?" element={<Restaurant_detail />} />
-        <Route path="/categories" element={<Categories />} />
-        <Route path="/categories/:slug-:id?" element={<Category_detail />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/terms" element={<Terms_privacy />} />
-        <Route path="*" element={<NotFound />} />
+        <Route path="/about" element={<About/>} />
       </Route>
     </Routes>
   );
-};
+}
 
 export default App;

@@ -1,13 +1,12 @@
-import React from "react";
-import Hero from "../components/hero";
-import "../styles/home.css";
+import React from 'react'
+import Hero from '../components/hero'
+import Footer from '../components/footer'
 
-const Home: React.FC = () => {
+export default function Home() {
   return (
-    <div className="home_container">
-      <Hero />
+    <div>
+      <Hero/>
+      <Footer/>
     </div>
-  );
-};
-
-export default Home;
+  )
+}
