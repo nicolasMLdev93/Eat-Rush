@@ -2,11 +2,9 @@ import React from "react";
 import {
   Box,
   Container,
-  Grid,
   Typography,
   IconButton,
   Link,
-  Divider,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -79,44 +77,62 @@ const Footer = () => {
   return (
     <FooterContainer component="footer">
       <Container maxWidth="lg">
-        <Grid container spacing={4} sx={{ mb: 4 }}>
-          <Grid item xs={12} md={4}>
-            <Box>
-              <LogoText>
-                <span style={{ color: "#D70F64" }}>⚡</span>
-                <span
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #D70F64 0%, #FF8000 100%)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  EatRush
-                </span>
-              </LogoText>
-              <Typography
-                variant="body2"
-                sx={{ color: "#666666", mb: 3, lineHeight: 1.6 }}
+        <Box sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          mb: 4,
+          "& > div": {
+            padding: "0 16px",
+            marginBottom: { xs: 3, md: 0 },
+            width: { xs: "100%", md: "33.333%" },
+            "&:first-of-type": {
+              paddingLeft: 0,
+            },
+            "&:last-of-type": {
+              paddingRight: 0,
+            }
+          }
+        }}>
+          <Box>
+            <LogoText>
+              <span style={{ color: "#D70F64" }}>⚡</span>
+              <span
+                style={{
+                  background:
+                    "linear-gradient(135deg, #D70F64 0%, #FF8000 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
               >
-                Tu comida favorita entregada en minutos.
-              </Typography>
+                EatRush
+              </span>
+            </LogoText>
+            <Typography
+              variant="body2"
+              sx={{ color: "#666666", mb: 3, lineHeight: 1.6 }}
+            >
+              Tu comida favorita entregada en minutos.
+            </Typography>
 
-              <Box sx={{ display: "flex" }}>
-                <SocialButton size="small" aria-label="Facebook">
-                  <FacebookIcon fontSize="small" />
-                </SocialButton>
-                <SocialButton size="small" aria-label="Instagram">
-                  <InstagramIcon fontSize="small" />
-                </SocialButton>
-                <SocialButton size="small" aria-label="Twitter">
-                  <TwitterIcon fontSize="small" />
-                </SocialButton>
-              </Box>
+            <Box sx={{ display: "flex" }}>
+              <SocialButton size="small" aria-label="Facebook">
+                <FacebookIcon fontSize="small" />
+              </SocialButton>
+              <SocialButton size="small" aria-label="Instagram">
+                <InstagramIcon fontSize="small" />
+              </SocialButton>
+              <SocialButton size="small" aria-label="Twitter">
+                <TwitterIcon fontSize="small" />
+              </SocialButton>
             </Box>
-          </Grid>
-          <Grid item xs={6} sm={3} md={2}>
+          </Box>
+
+    
+          <Box sx={{
+            width: { xs: "50%", sm: "25%", md: "16.666%" },
+            padding: "0 16px",
+          }}>
             <Typography
               variant="subtitle1"
               sx={{ fontWeight: 600, mb: 2, color: "#333333" }}
@@ -137,9 +153,13 @@ const Footer = () => {
                 Pedidos
               </FooterLink>
             </Box>
-          </Grid>
+          </Box>
 
-          <Grid item xs={6} sm={3} md={2}>
+  
+          <Box sx={{
+            width: { xs: "50%", sm: "25%", md: "16.666%" },
+            padding: "0 16px",
+          }}>
             <Typography
               variant="subtitle1"
               sx={{ fontWeight: 600, mb: 2, color: "#333333" }}
@@ -160,9 +180,11 @@ const Footer = () => {
                 FAQs
               </FooterLink>
             </Box>
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={4}>
+          </Box>
+          <Box sx={{
+            width: { xs: "100%", sm: "50%", md: "33.333%" },
+            padding: "0 16px",
+          }}>
             <Typography
               variant="subtitle1"
               sx={{ fontWeight: 600, mb: 2, color: "#333333" }}
@@ -202,8 +224,8 @@ const Footer = () => {
                 </Typography>
               </Box>
             </AppButton>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         <Box
           sx={{
