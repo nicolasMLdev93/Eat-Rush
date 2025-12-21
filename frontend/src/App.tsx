@@ -10,13 +10,13 @@ import Login from "./pages/login";
 import Cart from "./pages/cart";
 import Payment from "./pages/payment";
 
-function App() {
+const App: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="/about" element={<About/>} />
-        <Route path="/restaurant" element={<RestaurantDetail/>} />
+        <Route path="/restaurant/:id" element={<RestaurantDetail/>} />
         <Route path="/category" element={<CategoryDetail/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/cart" element={<Cart/>} />

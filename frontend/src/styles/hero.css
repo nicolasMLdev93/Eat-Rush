@@ -62,17 +62,16 @@
 .category-card {
   background: white;
   border-radius: 16px;
-  padding: 20px;
+  padding: 2px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 15px;
   cursor: pointer;
   transition: all 0.3s ease;
   border: 2px solid transparent;
-  height: 60px;
+  gap: 0;
 }
 
 .category-card:hover {
@@ -82,14 +81,10 @@
 }
 
 .category-icon {
-  font-size: 30px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+  font-size: 25px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
 }
 
 .category-info {
@@ -97,10 +92,9 @@
 }
 
 .category-name {
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 600;
   color: #333333;
-  margin: 0 0 5px 0;
 }
 
 .category-count {
@@ -390,12 +384,10 @@
 
   .category-card {
     padding: 15px;
-    height: 90px;
+    height: 120px;
   }
 
   .category-icon {
-    width: 50px;
-    height: 50px;
     font-size: 1.8rem;
   }
 
@@ -429,6 +421,7 @@
     text-align: center;
     padding: 15px 10px;
     height: auto;
+    height: 120px;
   }
 
   .category-info {
@@ -443,54 +436,34 @@
   }
 }
 
-.skeleton-title {
-  width: 200px;
-  height: 28px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 4px;
-}
-
-.skeleton-button {
-  width: 80px;
-  height: 32px;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  border-radius: 16px;
-}
-
 .category-card-skeleton {
   background: white;
   border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  height: 100px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  min-height: 100px;
 }
 
 .skeleton-icon {
   width: 40px;
   height: 40px;
+  border-radius: 50%;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 50%;
-  margin-bottom: 8px;
 }
 
 .skeleton-category-name {
-  width: 60px;
+  width: 80px;
   height: 16px;
+  border-radius: 8px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 4px;
 }
 
 .restaurant-card-skeleton {
@@ -521,29 +494,29 @@
 
 .skeleton-name {
   width: 60%;
-  height: 22px;
+  height: 20px;
+  border-radius: 10px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 4px;
 }
 
 .skeleton-rating {
-  width: 50px;
-  height: 24px;
+  width: 40px;
+  height: 20px;
+  border-radius: 10px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 12px;
 }
 
 .skeleton-description {
   width: 100%;
-  height: 16px;
+  height: 14px;
+  border-radius: 7px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 4px;
   margin-bottom: 8px;
 }
 
@@ -559,87 +532,40 @@
 }
 
 .skeleton-delivery {
-  width: 90px;
-  height: 20px;
+  width: 80px;
+  height: 16px;
+  border-radius: 8px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 4px;
 }
 
-.promo-banner-skeleton {
-  background: linear-gradient(135deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+.skeleton-button {
+  width: 70px;
+  height: 32px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
-  border-radius: 16px;
-  padding: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 30px;
 }
 
-.skeleton-promo-content {
-  flex: 1;
-}
-
-.skeleton-promo-title {
-  width: 250px;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.3);
-  margin-bottom: 12px;
-  border-radius: 4px;
-}
-
-.skeleton-promo-text {
+.section-header .skeleton-title {
   width: 200px;
-  height: 20px;
-  background: rgba(255, 255, 255, 0.3);
-  margin-bottom: 16px;
-  border-radius: 4px;
+  height: 28px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  margin-bottom: 10px;
 }
 
-.skeleton-promo-button {
-  width: 120px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-}
-
-.skeleton-promo-icon {
-  width: 80px;
-  height: 80px;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-}
-
-.error-container {
-  text-align: center;
-  padding: 40px;
-  background: white;
+.section-header .skeleton-button {
+  width: 100px;
+  height: 32px;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.error-container p {
-  color: #e74c3c;
-  margin-bottom: 20px;
-  font-size: 16px;
-}
-
-.error-container button {
-  background: #3498db;
-  color: white;
-  border: none;
-  padding: 10px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s;
-}
-
-.error-container button:hover {
-  background: #2980b9;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
 }
 
 @keyframes loading {
@@ -649,4 +575,21 @@
   100% {
     background-position: -200% 0;
   }
+}
+
+.empty-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: 20px 0;
+}
+
+.empty-container p {
+  color: #666;
+  font-size: 16px;
+  text-align: center;
 }

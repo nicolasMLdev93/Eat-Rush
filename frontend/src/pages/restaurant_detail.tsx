@@ -6,7 +6,6 @@ import {
   Grid,
   Card,
   CardContent,
-  CardMedia,
   Chip,
   IconButton,
   Rating,
@@ -18,6 +17,7 @@ import StarIcon from '@mui/icons-material/Star';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import Footer from '../components/footer';
+import { useParams } from 'react-router-dom';
 
 const RestaurantHeader = styled(Box)(({ theme }) => ({
   backgroundColor: '#ffffff',
@@ -39,9 +39,8 @@ const RestaurantImage = styled(Box)(({ theme }) => ({
   },
 }));
 
-// Card con altura fija
 const ProductCard = styled(Card)(({ theme }) => ({
-  height: '380px', // Altura fija para todas las cards
+  height: '380px',
   display: 'flex',
   flexDirection: 'column',
   borderRadius: '12px',
@@ -54,24 +53,21 @@ const ProductCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-// Contenedor de imagen con altura fija
 const ProductImageContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
-  height: '160px', // Altura fija para todas las imágenes
+  height: '160px', 
   width: '100%',
   overflow: 'hidden',
 }));
 
-// Imagen con object-fit cover
 const ProductImage = styled('img')({
   width: '100%',
   height: '100%',
-  objectFit: 'cover', // Esto hace que todas las imágenes se recorten igual
+  objectFit: 'cover',
   display: 'block',
 });
 
 const RestaurantDetail = () => {
-  // Datos del restaurante
   const restaurant = {
     id: 1,
     name: 'Burger Express',
@@ -88,7 +84,6 @@ const RestaurantDetail = () => {
     tags: ['🍔 Hamburguesas', '🥤 Bebidas', '🍟 Acompañamientos'],
   };
 
-  // Solo 3 productos con descripciones de longitud similar
   const products = [
     {
       id: 1,
@@ -121,7 +116,6 @@ const RestaurantDetail = () => {
 
   return (
     <Box>
-      {/* Header del restaurante */}
       <RestaurantHeader>
         <Container maxWidth="lg">
           <Grid container spacing={3} alignItems="center">
@@ -223,7 +217,6 @@ const RestaurantDetail = () => {
         </Container>
       </RestaurantHeader>
 
-      {/* Solo 3 productos - TODOS con el MISMO tamaño */}
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Typography variant="h5" sx={{ fontWeight: 700, mb: 3, color: '#c6c6c6ff' }}>
           Productos Destacados
@@ -260,13 +253,12 @@ const RestaurantDetail = () => {
                   flexDirection: 'column',
                   p: 2 
                 }}>
-                  {/* Contenedor para nombre y precio */}
                   <Box sx={{ 
                     display: 'flex', 
                     justifyContent: 'space-between', 
                     alignItems: 'flex-start', 
                     mb: 1,
-                    minHeight: '48px' // Altura mínima para que los nombres largos no desajusten
+                    minHeight: '48px'
                   }}>
                     <Typography 
                       variant="h6" 
@@ -283,8 +275,6 @@ const RestaurantDetail = () => {
                       ${product.price}
                     </Typography>
                   </Box>
-
-                  {/* Descripción con altura fija */}
                   <Box sx={{ mb: 2, flexGrow: 1, minHeight: '48px' }}>
                     <Typography 
                       variant="body2" 
@@ -298,12 +288,12 @@ const RestaurantDetail = () => {
                     </Typography>
                   </Box>
 
-                  {/* Footer de la card */}
+          
                   <Box sx={{ 
                     display: 'flex', 
                     justifyContent: 'space-between', 
                     alignItems: 'center',
-                    mt: 'auto' // Esto empuja el footer al fondo
+                    mt: 'auto'
                   }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <StarIcon sx={{ fontSize: '1rem', color: '#FFD700', mr: 0.5 }} />
@@ -321,7 +311,7 @@ const RestaurantDetail = () => {
                         borderRadius: '20px',
                         textTransform: 'none',
                         fontWeight: 500,
-                        minWidth: '100px', // Ancho fijo para todos los botones
+                        minWidth: '100px', 
                         '&:hover': {
                           backgroundColor: '#FF8000',
                         },

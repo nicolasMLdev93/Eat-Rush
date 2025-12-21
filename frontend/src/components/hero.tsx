@@ -9,6 +9,12 @@ import "../styles/hero.css";
 import get_allRestaurants from "../services/get_restaurants";
 import get_allCategories from "../services/get_categories";
 import { useState, useEffect } from "react";
+import burger_express from "../images/burger_express.jpg";
+import dragon_palace from "../images/dragon_palace.jpg";
+import pizza_veloz from "../images/pizza_veloz.jpg";
+import pasteleria from "../images/pasteleria.jpg";
+import cafeteria from "../images/cafeteria.jpg";
+import { useNavigate } from "react-router-dom";
 
 interface RestaurantApi {
   id: number;
@@ -19,112 +25,88 @@ interface RestaurantApi {
   isActive: boolean;
 }
 
-interface RestaurantUI {
+interface CategoryApi {
   id: number;
   name: string;
-  description: string;
-  address: string;
-  phone: string;
   isActive: boolean;
-  category: string;
-  rating: number;
-  deliveryTime: string;
-  image: string;
-  discount: string;
 }
 
-const categories = [
-  { id: 1, name: "Rápida", icon: "🍔" },
-  { id: 2, name: "Pizza", icon: "🍕" },
-  { id: 3, name: "Sushi", icon: "🍣" },
-  { id: 4, name: "Mexicana", icon: "🌮" },
-  { id: 5, name: "Saludable", icon: "🥗" },
+const categories_icons = [
+  { id: 1, icon: "🍔" },
+  { id: 2, icon: "🍕" },
+  { id: 3, icon: "🌮" },
+  { id: 4, icon: "🍣" },
+  { id: 5, icon: "🥗" },
+  { id: 6, icon: "🍰" },
+  { id: 7, icon: "🥤" },
 ];
 
-const defaultImages = [
-  "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1540420773420-3366772f4999?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+const restaurants_images = [
+  { id: 1, image: burger_express },
+  { id: 2, image: dragon_palace },
+  { id: 3, image: pizza_veloz },
+  { id: 4, image: pasteleria },
+  { id: 5, image: cafeteria },
 ];
-
-const adaptRestaurantData = (apiData: RestaurantApi[]): RestaurantUI[] => {
-  return apiData.map((restaurant, index) => {
-    let category = "Comida";
-    if (restaurant.name.toLowerCase().includes("burger")) category = "Hamburguesas";
-    if (restaurant.name.toLowerCase().includes("sushi")) category = "Sushi";
-    if (restaurant.name.toLowerCase().includes("pizza")) category = "Pizza";
-    if (restaurant.name.toLowerCase().includes("taco")) category = "Mexicana";
-    if (restaurant.description.toLowerCase().includes("salad") || restaurant.description.toLowerCase().includes("saludable")) category = "Saludable";
-    
-    const rating = parseFloat((4 + Math.random() * 1).toFixed(1));
-    const deliveryTimes = ["15-25 min", "20-30 min", "25-35 min", "30-40 min"];
-    const deliveryTime = deliveryTimes[Math.floor(Math.random() * deliveryTimes.length)];
-    const image = defaultImages[index % defaultImages.length];
-    const discount = "Envío gratis";
-
-    return {
-      id: restaurant.id,
-      name: restaurant.name,
-      description: restaurant.description,
-      address: restaurant.address,
-      phone: restaurant.phone,
-      isActive: restaurant.isActive,
-      category,
-      rating,
-      deliveryTime,
-      image,
-      discount,
-    };
-  });
-};
 
 const Hero: React.FC = () => {
-  const [restaurants, setRestaurants] = useState<RestaurantUI[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [restaurants, setRestaurants] = useState<RestaurantApi[]>([]);
+  const [categories, setcategories] = useState<CategoryApi[]>([]);
+  const [loading_rest, setloading_rest] = useState<boolean>(true);
+  const [loading_cat, setloading_cat] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    let isMounted = true;
-    setLoading(true);
-    setError(null);
-
+    setloading_rest(true);
     get_allRestaurants()
       .then((response) => {
-        if (isMounted && response && Array.isArray(response)) {
-          const adaptedData = adaptRestaurantData(response);
-          setRestaurants(adaptedData);
-        } else if (isMounted) {
-          setError("Datos de restaurantes no válidos");
+        if (response) {
+          setRestaurants(response);
         }
       })
       .catch((err) => {
-        if (isMounted) {
-          console.error("Error getting all restaurants on frontend!", err);
-          setError("No se pudieron cargar los restaurantes");
-        }
+        console.error("Error getting all restaurants on frontend!", err);
       })
       .finally(() => {
-        if (isMounted) {
-          setLoading(false);
-        }
+        setloading_rest(false);
       });
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
-  const renderSkeleton = () => {
-    return (
-      <div className="hero_container">
-        <section className="categories-section">
-          <div className="section-header">
-            <div className="skeleton-title"></div>
-            <div className="skeleton-button"></div>
-          </div>
+  useEffect(() => {
+    setloading_cat(true);
+    get_allCategories()
+      .then((response) => {
+        if (response) {
+          setcategories(response);
+        }
+      })
+      .catch((err) => {
+        console.error("Error getting all categories on frontend!", err);
+      })
+      .finally(() => {
+        setloading_cat(false);
+      });
+  }, []);
 
+  const get_catIcon = (id: number): string => {
+    const icon = categories_icons.find((icon) => icon.id === id);
+    return icon ? icon.icon : "";
+  };
+
+  const get_restImg = (id: number): any => {
+    const img = restaurants_images.find((img) => img.id === id);
+    return img ? img.image : "";
+  };
+
+  return (
+    <div className="hero_container">
+      <section className="categories-section">
+        <div className="section-header">
+          <h2 className="section-title">Explora por categoría</h2>
+          <button className="see-all-btn">Ver todas</button>
+        </div>
+
+        {loading_cat ? (
           <Swiper
             modules={[Navigation]}
             spaceBetween={15}
@@ -145,14 +127,43 @@ const Hero: React.FC = () => {
               </SwiperSlide>
             ))}
           </Swiper>
-        </section>
-
-        <section className="restaurants-section">
-          <div className="section-header">
-            <div className="skeleton-title"></div>
-            <div className="skeleton-button"></div>
+        ) : categories.length === 0 ? (
+          <div className="empty-container">
+            <p>No hay ninguna categoría disponible en este momento.</p>
           </div>
+        ) : (
+          <Swiper
+            modules={[Navigation]}
+            spaceBetween={15}
+            slidesPerView={2.5}
+            breakpoints={{
+              640: { slidesPerView: 3.5, spaceBetween: 20 },
+              768: { slidesPerView: 4.5, spaceBetween: 25 },
+              1024: { slidesPerView: 6.5, spaceBetween: 30 },
+            }}
+            className="categories-swiper"
+          >
+            {categories.map((category) => (
+              <SwiperSlide key={category.id}>
+                <div className="category-card">
+                  <div className="category-info">
+                    <p className="category-icon">{get_catIcon(category.id)}</p>
+                    <p className="category-name">{category.name}</p>
+                  </div>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
+      </section>
 
+      <section className="restaurants-section">
+        <div className="section-header">
+          <h2 className="section-title">Restaurantes populares</h2>
+          <button className="see-all-btn">Ver todos</button>
+        </div>
+
+        {loading_rest ? (
           <Swiper
             modules={[Navigation, Pagination, Autoplay]}
             spaceBetween={20}
@@ -186,147 +197,79 @@ const Hero: React.FC = () => {
               </SwiperSlide>
             ))}
           </Swiper>
-        </section>
-
-        <section className="promo-banner-skeleton">
-          <div className="skeleton-promo-content">
-            <div className="skeleton-promo-title"></div>
-            <div className="skeleton-promo-text"></div>
-            <div className="skeleton-promo-button"></div>
+        ) : restaurants.length === 0 ? (
+          <div className="empty-container">
+            <p>No hay restaurantes disponibles en este momento.</p>
           </div>
-          <div className="skeleton-promo-icon"></div>
-        </section>
-      </div>
-    );
-  };
-
-  if (error) {
-    return (
-      <div className="hero_container">
-        <div className="error-container">
-          <p>{error}</p>
-          <button onClick={() => window.location.reload()}>Reintentar</button>
-        </div>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return renderSkeleton();
-  }
-
-  if (restaurants.length === 0) {
-    return (
-      <div className="hero_container">
-        <div className="empty-container">
-          <p>No hay restaurantes disponibles en este momento.</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="hero_container">
-      <section className="categories-section">
-        <div className="section-header">
-          <h2 className="section-title">Explora por categoría</h2>
-          <button className="see-all-btn">Ver todas</button>
-        </div>
-
-        <Swiper
-          modules={[Navigation]}
-          spaceBetween={15}
-          slidesPerView={2.5}
-          breakpoints={{
-            640: { slidesPerView: 3.5, spaceBetween: 20 },
-            768: { slidesPerView: 4.5, spaceBetween: 25 },
-            1024: { slidesPerView: 6.5, spaceBetween: 30 },
-          }}
-          className="categories-swiper"
-        >
-          {categories.map((category) => (
-            <SwiperSlide key={category.id}>
-              <div className="category-card">
-                <div className="category-icon">{category.icon}</div>
-                <div className="category-info">
-                  <h5 className="category-name">{category.name}</h5>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </section>
-
-      <section className="restaurants-section">
-        <div className="section-header">
-          <h2 className="section-title">Restaurantes populares</h2>
-          <button className="see-all-btn">Ver todos</button>
-        </div>
-
-        <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
-          spaceBetween={20}
-          slidesPerView={1.2}
-          pagination={{ clickable: true }}
-          autoplay={{ delay: 4000, disableOnInteraction: false }}
-          breakpoints={{
-            640: { slidesPerView: 2.2, spaceBetween: 20 },
-            768: { slidesPerView: 2.5, spaceBetween: 25 },
-            1024: { slidesPerView: 3.2, spaceBetween: 30 },
-            1280: { slidesPerView: 4.2, spaceBetween: 30 },
-          }}
-          className="restaurants-swiper"
-        >
-          {restaurants.map((restaurant) => (
-            <SwiperSlide key={restaurant.id}>
-              <div className="restaurant-card">
-                <div className="restaurant-image-container">
-                  <img
-                    src={restaurant.image}
-                    alt={restaurant.name}
-                    className="restaurant-image"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = defaultImages[0];
-                    }}
-                  />
-                  {restaurant.discount && (
-                    <div className="discount-badge">{restaurant.discount}</div>
-                  )}
-                  <button className="favorite-btn">❤️</button>
-                </div>
-
-                <div className="restaurant-info">
-                  <div className="restaurant-header">
-                    <h3 className="restaurant-name">{restaurant.name}</h3>
-                    <div className="rating-badge">
-                      <span className="rating-star">⭐</span>
-                      <span className="rating-value">{restaurant.rating}</span>
-                    </div>
+        ) : (
+          <Swiper
+            modules={[Navigation, Pagination, Autoplay]}
+            spaceBetween={20}
+            slidesPerView={1.2}
+            pagination={{ clickable: true }}
+            autoplay={{ delay: 4000, disableOnInteraction: false }}
+            breakpoints={{
+              640: { slidesPerView: 2.2, spaceBetween: 20 },
+              768: { slidesPerView: 2.5, spaceBetween: 25 },
+              1024: { slidesPerView: 3.2, spaceBetween: 30 },
+              1280: { slidesPerView: 4.2, spaceBetween: 30 },
+            }}
+            className="restaurants-swiper"
+          >
+            {restaurants.map((restaurant) => (
+              <SwiperSlide key={restaurant.id}>
+                <div className="restaurant-card">
+                  <div className="restaurant-image-container">
+                    <img
+                      src={get_restImg(restaurant.id)}
+                      className="restaurant-image"
+                    />
+                    <button className="favorite-btn">❤️</button>
                   </div>
 
-                  <p className="restaurant-description">
-                    {restaurant.description.substring(0, 30)}...
-                  </p>
-
-                  <div className="restaurant-footer">
-                    <div className="delivery-info">
-                      <span className="delivery-icon">🚚</span>
-                      <span className="delivery-time">{restaurant.deliveryTime}</span>
+                  <div className="restaurant-info">
+                    <div className="restaurant-header">
+                      <h3 className="restaurant-name">{restaurant.name}</h3>
+                      <div className="rating-badge">
+                        <span className="rating-star">⭐</span>
+                        <span className="rating-value">4.5</span>
+                      </div>
                     </div>
-                    <button className="order-btn">Ordenar</button>
+
+                    <p className="restaurant-description">
+                      {restaurant.description.substring(0, 30)}...
+                    </p>
+
+                    <div className="restaurant-footer">
+                      <div className="delivery-info">
+                        <span className="delivery-icon">🚚</span>
+                        <span className="delivery-time">
+                          {restaurant.id % 2 == 0 ? "20-30 min" : "25-30 min"}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() =>
+                          navigate(`restaurant/${restaurant.id}`)
+                        }
+                        className="order-btn"
+                      >
+                        Ordenar
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
       </section>
 
       <section className="promo-banner">
         <div className="promo-content">
           <h2 className="promo-title">¡Primer pedido con 30% OFF!</h2>
           <p className="promo-description">
-            Usa el código <span className="promo-code">Z5LSD6651D30</span> en tu primera compra
+            Usa el código <span className="promo-code">Z5LSD6651D30</span> en tu
+            primera compra
           </p>
           <button className="promo-btn">Usar código</button>
         </div>

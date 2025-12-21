@@ -21,7 +21,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 
-// Estilo para la barra de búsqueda
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: "50px",
@@ -349,7 +348,6 @@ export default function Navbar() {
         }}
       >
         <Toolbar sx={{ padding: { xs: "0 8px", sm: "0 16px" } }}>
-          {/* Logo */}
           <Typography
             variant="h5"
             component="div"

@@ -21,7 +21,7 @@ const get_allCategories = async (): Promise<Category[]> => {
     if (!response.data.success) {
       throw new Error("API returned unsuccessful response");
     }
-    return response.data.restaurants;
+    return response.data.categories;
   } catch (error) {
     console.log("Error getting all categories");
     throw new Error(`Failed to fetch categories: ${error}`);
