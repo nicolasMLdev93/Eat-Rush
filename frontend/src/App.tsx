@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/layout";
@@ -8,20 +7,26 @@ import RestaurantDetail from "./pages/restaurant_detail";
 import Login from "./pages/login";
 import Cart from "./pages/cart";
 import Payment from "./pages/payment";
+import NotFound from "./pages/not_found";
+import CategoryDetail_ID from "./pages/categori_detailID";
+import CategoryDetail_Name from "./pages/categori_detailName";
 
 const App: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
-        <Route path="/about" element={<About/>} />
-        <Route path="/restaurant/:id" element={<RestaurantDetail/>} />
-        <Route path="/login" element={<Login/>} />
-        <Route path="/cart" element={<Cart/>} />
-        <Route path="/payment" element={<Payment/>} />
+        <Route path="/about" element={<About />} />
+        <Route path="/restaurant/:id" element={<RestaurantDetail />} />
+        <Route path="/category/:id" element={<CategoryDetail_ID />} />
+        <Route path="/category/name/:name" element={<CategoryDetail_Name />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );
-}
+};
 
 export default App;

@@ -109,10 +109,13 @@ const Hero: React.FC = () => {
           >
             {categories.map((category) => (
               <SwiperSlide key={category.id}>
-                <div className="category-card">
+                <div
+                  onClick={() => navigate(`category/${category.id}`)}
+                  className="category-card"
+                >
                   <div className="category-info">
                     <p className="category-icon">{get_catIcon(category.id)}</p>
-                    <p className="category-name">{category.name}</p>
+                    <p className="category-name_icon">{category.name}</p>
                   </div>
                 </div>
               </SwiperSlide>

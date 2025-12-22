@@ -4,10 +4,10 @@ import type { AxiosResponse } from "axios";
 
 const API_BASE = "http://localhost:3000";
 
-const get_productsByRest = async (id: number): Promise<ProductApi[]> => {
+const get_productsByCat = async (id: number): Promise<ProductApi[]> => {
   try {
     const response: AxiosResponse<ApiResponse_product> = await axios.get(
-      `${API_BASE}/products_rest/${id}`
+      `${API_BASE}/products_cat/${id}`
     );
     if (!response.data.success) {
       throw new Error("API returned unsuccessful response");
@@ -18,4 +18,4 @@ const get_productsByRest = async (id: number): Promise<ProductApi[]> => {
   }
 };
 
-export default get_productsByRest;
+export default get_productsByCat;

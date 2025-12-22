@@ -21,6 +21,13 @@ import c_cake from "../images/cheese_cake.jpg";
 import cappuccino from "../images/cappuccino.jpg";
 import cold_brew from "../images/cold_brew.jpg";
 import smooothie from "../images/smoothie.jpg";
+import hamburguesa_cat from "../images/hamburguesa_cat.jpg";
+import pizzas_cat from "../images/pizza_cat.jpg";
+import mexicana_cat from "../images/mexicana_cat.jpg";
+import asiatica_cat from "../images/asiatica_cat.jpg";
+import ensaladas_cat from "../images/ensalada_cat.jpg";
+import postres_cat from "../images/postres_cat.jpg";
+import bebidas_cat from "../images/bebidas_cat.jpg";
 
 interface Rest_images {
   id: number;
@@ -30,6 +37,11 @@ interface Rest_images {
 interface Cat_icon {
   id: number;
   icon: string;
+}
+
+interface Cat_img {
+  id: number;
+  image: string;
 }
 
 interface Products_images {
@@ -76,5 +88,20 @@ const categories_icons: Cat_icon[] = [
   { id: 7, icon: "🥤" },
 ];
 
+const category_images: Cat_img[] = [
+  { id: 1, image: hamburguesa_cat },
+  { id: 2, image: pizzas_cat },
+  { id: 3, image: mexicana_cat },
+  { id: 4, image: asiatica_cat },
+  { id: 5, image: ensaladas_cat },
+  { id: 6, image: postres_cat },
+  { id: 7, image: bebidas_cat },
+];
+
 export type { Rest_images, Cat_icon, Products_images };
-export { restaurants_images, categories_icons, products_images };
+export {
+  restaurants_images,
+  categories_icons,
+  products_images,
+  category_images,
+};

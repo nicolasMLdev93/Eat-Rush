@@ -17,7 +17,6 @@ const get_allRestaurants = async (): Promise<RestaurantApi[]> => {
     }
     return response.data.restaurants;
   } catch (error) {
-    console.log("Error getting all restautants");
     throw new Error(`Failed to fetch restaurants: ${error}`);
   }
 };

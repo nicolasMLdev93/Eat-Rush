@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -17,9 +18,17 @@ import CloseIcon from "@mui/icons-material/Close";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
+import HomeIcon from "@mui/icons-material/Home";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import HistoryIcon from "@mui/icons-material/History";
+import SettingsIcon from "@mui/icons-material/Settings";
+import HelpIcon from "@mui/icons-material/Help";
+import LocalMallIcon from "@mui/icons-material/LocalMall";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -116,6 +125,11 @@ export default function Navbar() {
   const [searchTerm, setSearchTerm] = useState("");
   const [cartItems] = useState(3);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate("/");
+  };
 
   const handleSearch = (event) => {
     if (event.key === "Enter" && searchTerm.trim()) {
@@ -200,8 +214,7 @@ export default function Navbar() {
 
         <Divider sx={{ my: 1 }} />
 
-        <ListItem
-          button
+        <ListItemButton
           sx={{
             borderRadius: "8px",
             mb: 2,
@@ -220,7 +233,7 @@ export default function Navbar() {
               color: "#333333",
             }}
           />
-        </ListItem>
+        </ListItemButton>
 
         <Divider sx={{ my: 1 }} />
 
@@ -290,28 +303,44 @@ export default function Navbar() {
         <Divider sx={{ my: 3 }} />
 
         <List sx={{ p: 0 }}>
-          {["Mis pedidos", "Favoritos", "Historial", "Configuración"].map(
-            (text) => (
-              <ListItem
-                button
-                key={text}
-                sx={{
-                  borderRadius: "8px",
-                  mb: 1,
-                  "&:hover": {
-                    backgroundColor: "rgba(0, 0, 0, 0.04)",
-                  },
+          {[
+            { text: "Inicio", icon: <HomeIcon />, path: "/" },
+            {
+              text: "Restaurantes",
+              icon: <RestaurantIcon />,
+              path: "/restaurants",
+            },
+            { text: "Favoritos", icon: <FavoriteIcon />, path: "/favorites" },
+            { text: "Mis pedidos", icon: <LocalMallIcon />, path: "/orders" },
+            { text: "Historial", icon: <HistoryIcon />, path: "/history" },
+            {
+              text: "Configuración",
+              icon: <SettingsIcon />,
+              path: "/settings",
+            },
+          ].map((item) => (
+            <ListItemButton
+              key={item.text}
+              sx={{
+                borderRadius: "8px",
+                mb: 1,
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                },
+              }}
+            >
+              <ListItemIcon>
+                {React.cloneElement(item.icon, { sx: { color: "#D70F64" } })}
+              </ListItemIcon>
+              <ListItemText
+                primary={item.text}
+                primaryTypographyProps={{
+                  color: "#333333",
+                  fontWeight: 500,
                 }}
-              >
-                <ListItemText
-                  primary={text}
-                  primaryTypographyProps={{
-                    color: "#333333",
-                  }}
-                />
-              </ListItem>
-            )
-          )}
+              />
+            </ListItemButton>
+          ))}
         </List>
       </List>
 
@@ -330,6 +359,7 @@ export default function Navbar() {
               backgroundColor: "rgba(0, 0, 0, 0.02)",
             },
           }}
+          startIcon={<HelpIcon />}
         >
           Ayuda y soporte
         </Button>
@@ -348,35 +378,49 @@ export default function Navbar() {
         }}
       >
         <Toolbar sx={{ padding: { xs: "0 8px", sm: "0 16px" } }}>
-          <Typography
-            variant="h5"
-            component="div"
+          <Box
             sx={{
               flexGrow: 0,
-              fontWeight: 800,
-              fontFamily: '"Poppins", "Roboto", sans-serif',
-              letterSpacing: "-0.5px",
-              color: "#333333",
               display: "flex",
               alignItems: "center",
               gap: 0.5,
               minWidth: "fit-content",
               mr: { xs: 1, sm: 2 },
+              cursor: "pointer",
+              "&:hover": {
+                opacity: 0.8,
+              },
             }}
+            onClick={handleLogoClick}
           >
-            <span style={{ color: "#D70F64" }}>⚡</span>
-            <span
-              style={{
-                background: "linear-gradient(135deg, #D70F64 0%, #FF8000 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                fontSize: { xs: "1.1rem", sm: "1.5rem" },
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{
+                fontWeight: 800,
+                fontFamily: '"Poppins", "Roboto", sans-serif',
+                letterSpacing: "-0.5px",
+                color: "#333333",
+                display: "flex",
+                alignItems: "center",
+                gap: 0.5,
               }}
             >
-              EatRush
-            </span>
-          </Typography>
+              <span style={{ color: "#D70F64" }}>⚡</span>
+              <span
+                style={{
+                  background:
+                    "linear-gradient(135deg, #D70F64 0%, #FF8000 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  fontSize: { xs: "1.1rem", sm: "1.5rem" },
+                }}
+              >
+                EatRush
+              </span>
+            </Typography>
+          </Box>
 
           <MobileSearch
             sx={{ display: { xs: "flex", md: "none" }, flexGrow: 1 }}

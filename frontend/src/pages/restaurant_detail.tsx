@@ -258,7 +258,7 @@ const RestaurantDetail: React.FC = () => {
               />
 
               <Chip
-                label="🔥 Envío gratis"
+                label="🔥 Promo"
                 size="small"
                 className="popular-chip"
               />
