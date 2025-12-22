@@ -9,45 +9,9 @@ import "../styles/hero.css";
 import get_allRestaurants from "../services/get_restaurants";
 import get_allCategories from "../services/get_categories";
 import { useState, useEffect } from "react";
-import burger_express from "../images/burger_express.jpg";
-import dragon_palace from "../images/dragon_palace.jpg";
-import pizza_veloz from "../images/pizza_veloz.jpg";
-import pasteleria from "../images/pasteleria.jpg";
-import cafeteria from "../images/cafeteria.jpg";
 import { useNavigate } from "react-router-dom";
-
-interface RestaurantApi {
-  id: number;
-  name: string;
-  description: string;
-  address: string;
-  phone: string;
-  isActive: boolean;
-}
-
-interface CategoryApi {
-  id: number;
-  name: string;
-  isActive: boolean;
-}
-
-const categories_icons = [
-  { id: 1, icon: "🍔" },
-  { id: 2, icon: "🍕" },
-  { id: 3, icon: "🌮" },
-  { id: 4, icon: "🍣" },
-  { id: 5, icon: "🥗" },
-  { id: 6, icon: "🍰" },
-  { id: 7, icon: "🥤" },
-];
-
-const restaurants_images = [
-  { id: 1, image: burger_express },
-  { id: 2, image: dragon_palace },
-  { id: 3, image: pizza_veloz },
-  { id: 4, image: pasteleria },
-  { id: 5, image: cafeteria },
-];
+import { restaurants_images, categories_icons } from "../data/images";
+import type { RestaurantApi, CategoryApi } from "../interfaces/interfaces";
 
 const Hero: React.FC = () => {
   const [restaurants, setRestaurants] = useState<RestaurantApi[]>([]);
@@ -88,14 +52,14 @@ const Hero: React.FC = () => {
       });
   }, []);
 
-  const get_catIcon = (id: number): string => {
+  const get_catIcon = (id: number) => {
     const icon = categories_icons.find((icon) => icon.id === id);
-    return icon ? icon.icon : "";
+    return icon?.icon;
   };
 
-  const get_restImg = (id: number): any => {
+  const get_restImg = (id: number) => {
     const img = restaurants_images.find((img) => img.id === id);
-    return img ? img.image : "";
+    return img?.image;
   };
 
   return (
@@ -248,9 +212,7 @@ const Hero: React.FC = () => {
                         </span>
                       </div>
                       <button
-                        onClick={() =>
-                          navigate(`restaurant/${restaurant.id}`)
-                        }
+                        onClick={() => navigate(`restaurant/${restaurant.id}`)}
                         className="order-btn"
                       >
                         Ordenar

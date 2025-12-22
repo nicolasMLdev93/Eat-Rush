@@ -1,71 +1,307 @@
-/* styles/restaurant.css */
-
-/* Animación para agregar al carrito */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
+.restaurant-detail-container {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
-.add-to-cart-animation {
-  animation: pulse 0.3s ease;
+.restaurant-header_detail {
+  background-color: #ffffff;
+  padding: 32px 0;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-/* Estilos responsive */
 @media (max-width: 600px) {
-  .restaurant-header-info {
-    flex-direction: column;
-    align-items: flex-start !important;
-  }
-  
-  .restaurant-stats {
-    flex-wrap: wrap;
-  }
-  
-  .product-card {
-    margin-bottom: 16px;
-  }
-  
-  .category-tabs {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-  }
-}
-
-/* Ajustes para tablets */
-@media (min-width: 601px) and (max-width: 960px) {
-  .restaurant-image {
-    height: 250px;
-  }
-  
-  .product-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Modo oscuro */
-@media (prefers-color-scheme: dark) {
-  .restaurant-detail-container {
-    background-color: #121212;
-  }
-  
   .restaurant-header {
-    background-color: #1e1e1e;
-    border-bottom-color: #333;
+    padding: 16px 0;
   }
-  
-  .product-card {
-    background-color: #1e1e1e;
-    border-color: #333;
+}
+
+.restaurant-info-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .restaurant-info-container {
+    flex-direction: column;
   }
-  
-  .search-field .MuiOutlinedInput-root {
-    background-color: #2a2a2a;
+}
+
+.restaurant-image-section {
+  flex: 1;
+  min-width: 300px;
+  max-width: 100%;
+}
+
+.restaurant-image-wrapper {
+  width: 100%;
+  height: 300px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+@media (max-width: 600px) {
+  .restaurant-image-wrapper {
+    height: 200px;
   }
+}
+
+.restaurant-main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.specialty-chip {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background-color: #d70f64 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.restaurant-details-section {
+  flex: 2;
+  min-width: 300px;
+}
+
+.restaurant-title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.restaurant-title-wrapper {
+  flex: 1;
+}
+
+.restaurant-name {
+  font-weight: 800 !important;
+  color: #333333 !important;
+  margin-bottom: 8px !important;
+}
+
+.restaurant-category {
+  color: #666666 !important;
+  margin-bottom: 16px !important;
+}
+
+.restaurant-rating-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.rating-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.rating-text {
+  color: #666666 !important;
+  margin-left: 8px !important;
+}
+
+.favorite-button .MuiSvgIcon-root {
+  color: #999999;
+}
+
+.delivery-info-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.delivery-info-item {
+  flex: 1;
+  min-width: 120px;
+}
+
+.delivery-icon-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delivery-icon {
+  color: #d70f64 !important;
+}
+
+.delivery-label {
+  color: #666666 !important;
+  display: block !important;
+}
+
+.delivery-value {
+  font-weight: 600 !important;
+  color: #4e4e4e;
+}
+
+.restaurant-description {
+  color: #666666 !important;
+  margin-bottom: 16px !important;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.restaurant-tag {
+  background-color: #f8f9fa !important;
+  color: #666666 !important;
+  border: 1px solid #e0e0e0 !important;
+}
+
+.products-container {
+  padding-top: 32px !important;
+  padding-bottom: 32px !important;
+}
+
+.featured-products-title {
+  font-weight: 700 !important;
+  margin-bottom: 24px !important;
+  color: #c6c6c6 !important;
+}
+
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.product-item {
+  flex: 1;
+  min-width: 300px;
+  max-width: 100%;
+}
+
+@media (min-width: 600px) and (max-width: 900px) {
+  .product-item {
+    flex: 0 0 calc(50% - 24px);
+  }
+}
+
+@media (min-width: 900px) {
+  .product-item {
+    flex: 0 0 calc(33.333% - 24px);
+  }
+}
+
+.product-card {
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px !important;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0 !important;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.product-image-container {
+  position: relative;
+  height: 160px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.popular-chip {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: #ff8000 !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.product-card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px !important;
+}
+
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  min-height: 48px;
+}
+
+.product-name {
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  line-height: 1.2 !important;
+  max-width: 60%;
+}
+
+.product-price {
+  color: #d70f64 !important;
+  font-weight: 700 !important;
+}
+
+.product-description-container {
+  margin-bottom: 16px;
+  flex-grow: 1;
+  min-height: 48px;
+}
+
+.product-description {
+  color: #666666 !important;
+  font-size: 0.9rem !important;
+  line-height: 1.4 !important;
+}
+
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+}
+
+.star-icon {
+  font-size: 1rem !important;
+  color: #ffd700;
+  margin-right: 4px;
+}
+
+.rating-value {
+  color: #666666 !important;
+}
+
+.add-button {
+  background-color: #d70f64 !important;
+  color: #ffffff !important;
+  border-radius: 20px !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  min-width: 100px !important;
+}
+
+.add-button:hover {
+  background-color: #ff8000 !important;
 }

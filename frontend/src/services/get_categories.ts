@@ -1,21 +1,15 @@
 import axios from "axios";
-
-interface Category {
-  id: number;
-  name: string;
-  isActive: boolean;
-}
-
-interface ApiResponse {
-  categories: Category[];
-  success: boolean;
-}
+import type {
+  CategoryApi,
+  ApiResponse_categories,
+} from "../interfaces/interfaces";
+import type { AxiosResponse } from "axios";
 
 const API_BASE = "http://localhost:3000";
 
-const get_allCategories = async (): Promise<Category[]> => {
+const get_allCategories = async (): Promise<CategoryApi[]> => {
   try {
-    const response: AxiosResponse<ApiResponse> = await axios.get(
+    const response: AxiosResponse<ApiResponse_categories> = await axios.get(
       `${API_BASE}/categories`
     );
     if (!response.data.success) {

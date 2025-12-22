@@ -1,332 +1,321 @@
-import React from 'react';
+import React from "react";
 import {
   Box,
   Container,
   Typography,
-  Grid,
   Card,
   CardContent,
   Chip,
   IconButton,
   Rating,
   Button,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import StarIcon from '@mui/icons-material/Star';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import Footer from '../components/footer';
-import { useParams } from 'react-router-dom';
+  Skeleton,
+} from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import StarIcon from "@mui/icons-material/Star";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import Footer from "../components/footer";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import get_restaurantsById from "../services/get_restaurantID";
+import get_productsByRest from "../services/get_productsRest";
+import { restaurants_images, products_images } from "../data/images";
+import type { RestaurantApi, ProductApi } from "../interfaces/interfaces";
+import "../styles/rest_detail.css";
 
-const RestaurantHeader = styled(Box)(({ theme }) => ({
-  backgroundColor: '#ffffff',
-  padding: theme.spacing(4, 0),
-  borderBottom: '1px solid #f0f0f0',
-  [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(2, 0),
-  },
-}));
+const RestaurantDetail: React.FC = () => {
+  const { id } = useParams();
+  const [restaurant, setrestaurant] = useState<RestaurantApi | null>(null);
+  const [products_rest, setproducts_rest] = useState<ProductApi[]>([]);
+  const [loading_rest, setloading_rest] = useState<boolean>(true);
+  const [loading_prod, setloading_prod] = useState<boolean>(true);
 
-const RestaurantImage = styled(Box)(({ theme }) => ({
-  width: '100%',
-  height: '300px',
-  borderRadius: '16px',
-  overflow: 'hidden',
-  position: 'relative',
-  [theme.breakpoints.down('sm')]: {
-    height: '200px',
-  },
-}));
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
 
-const ProductCard = styled(Card)(({ theme }) => ({
-  height: '380px',
-  display: 'flex',
-  flexDirection: 'column',
-  borderRadius: '12px',
-  overflow: 'hidden',
-  transition: 'all 0.3s ease',
-  border: '1px solid #f0f0f0',
-  '&:hover': {
-    transform: 'translateY(-4px)',
-    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.1)',
-  },
-}));
+  useEffect(() => {
+    setloading_rest(true);
+    get_restaurantsById(id)
+      .then((response) => {
+        if (response) {
+          setrestaurant(response);
+        }
+      })
+      .catch((err) => {
+        console.log("Error getting restaurant by id", err);
+      })
+      .finally(() => {
+        setloading_rest(false);
+      });
+  }, [id]);
 
-const ProductImageContainer = styled(Box)(({ theme }) => ({
-  position: 'relative',
-  height: '160px', 
-  width: '100%',
-  overflow: 'hidden',
-}));
+  useEffect(() => {
+    setloading_prod(true);
+    get_productsByRest(id)
+      .then((response) => {
+        if (response) {
+          setproducts_rest(response);
+        }
+      })
+      .catch((err) => {
+        console.log("Error getting restaurant by id", err);
+      })
+      .finally(() => {
+        setloading_prod(false);
+      });
+  }, [id]);
 
-const ProductImage = styled('img')({
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-  display: 'block',
-});
-
-const RestaurantDetail = () => {
-  const restaurant = {
-    id: 1,
-    name: 'Burger Express',
-    category: 'Hamburguesas • Americana',
-    rating: 4.7,
-    reviewCount: 1254,
-    deliveryTime: '15-25 min',
-    deliveryFee: '$2.99',
-    minOrder: '$15.00',
-    image: 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-    description: 'Las mejores hamburguesas artesanales de la ciudad. Ingredientes frescos y preparación tradicional.',
-    address: 'Av. Principal 1234, Centro',
-    openingHours: 'Lun-Dom: 10:00 AM - 11:00 PM',
-    tags: ['🍔 Hamburguesas', '🥤 Bebidas', '🍟 Acompañamientos'],
+  const get_restImg = (id: number) => {
+    const img = restaurants_images.find((rest) => rest.id == id);
+    return img?.image;
   };
 
-  const products = [
-    {
-      id: 1,
-      name: 'Classic Burger',
-      description: 'Carne 100% res, lechuga, tomate, cebolla y queso cheddar.',
-      price: 12.99,
-      image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80',
-      rating: 4.8,
-      popular: true,
-    },
-    {
-      id: 2,
-      name: 'Papas Fritas',
-      description: 'Porción grande de papas fritas crujientes y doradas.',
-      price: 5.99,
-      image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80',
-      rating: 4.6,
-      popular: true,
-    },
-    {
-      id: 3,
-      name: 'Coca-Cola',
-      description: 'Refresco de 500ml frío y refrescante.',
-      price: 3.99,
-      image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400&q=80',
-      rating: 4.7,
-      popular: false,
-    },
-  ];
+  const get_ProdImg = (id: number) => {
+    const img = products_images.find((prod) => prod.id == id);
+    return img?.image;
+  };
 
-  return (
-    <Box>
-      <RestaurantHeader>
-        <Container maxWidth="lg">
-          <Grid container spacing={3} alignItems="center">
-            <Grid item xs={12} md={4}>
-              <RestaurantImage>
-                <img
-                  src={restaurant.image}
-                  alt={restaurant.name}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-                <Chip
-                  label="🍔 Especialidad"
-                  sx={{
-                    position: 'absolute',
-                    top: 16,
-                    left: 16,
-                    backgroundColor: '#D70F64',
-                    color: '#ffffff',
-                    fontWeight: 600,
-                  }}
-                />
-              </RestaurantImage>
-            </Grid>
+  const renderRestaurantSkeleton = () => (
+    <Box className="restaurant-info-container">
+      <Box className="restaurant-image-section">
+        <Box className="restaurant-image-wrapper">
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={300}
+            sx={{ borderRadius: 2 }}
+          />
+          <Skeleton variant="rectangular" width={100} height={32} />
+        </Box>
+      </Box>
 
-            <Grid item xs={12} md={8}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 800, color: '#333333', mb: 1 }}>
-                    {restaurant.name}
+      <Box className="restaurant-details-section">
+        <Box className="restaurant-title-container">
+          <Box className="restaurant-title-wrapper">
+            <Skeleton variant="text" width="80%" height={40} />
+            <Skeleton variant="text" width="60%" height={24} />
+            <Skeleton variant="text" width="70%" height={24} />
+            <Box className="restaurant-rating-container">
+              <Box className="rating-wrapper">
+                <Skeleton variant="text" width={120} height={32} />
+              </Box>
+            </Box>
+          </Box>
+          <Skeleton variant="circular" width={40} height={40} />
+        </Box>
+
+        <Box className="delivery-info-container">
+          <Box className="delivery-info-item">
+            <Box className="delivery-icon-text">
+              <Skeleton variant="circular" width={24} height={24} />
+              <Box>
+                <Skeleton variant="text" width={60} height={20} />
+                <Skeleton variant="text" width={100} height={24} />
+              </Box>
+            </Box>
+          </Box>
+
+          <Box className="delivery-info-item">
+            <Box className="delivery-icon-text">
+              <Skeleton variant="circular" width={24} height={24} />
+              <Box>
+                <Skeleton variant="text" width={60} height={20} />
+                <Skeleton variant="text" width={80} height={24} />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+
+  const renderProductsSkeleton = () => (
+    <Box className="products-grid">
+      {[1, 2, 3, 4, 5, 6].map((item) => (
+        <Box className="product-item" key={item}>
+          <Card className="product-card">
+            <Box className="product-image-container">
+              <Skeleton
+                variant="rectangular"
+                width="100%"
+                height={200}
+                sx={{ borderRadius: "12px 12px 0 0" }}
+              />
+              <Skeleton variant="rectangular" width={100} height={24} />
+            </Box>
+
+            <CardContent className="product-card-content">
+              <Box className="product-header">
+                <Skeleton variant="text" width="60%" height={30} />
+                <Skeleton variant="text" width="20%" height={30} />
+              </Box>
+              <Box className="product-description-container">
+                <Skeleton variant="text" width="100%" height={20} />
+                <Skeleton variant="text" width="80%" height={20} />
+              </Box>
+
+              <Box className="product-footer">
+                <Box className="product-rating">
+                  <Skeleton variant="circular" width={20} height={20} />
+                  <Skeleton variant="text" width={40} height={20} />
+                </Box>
+                <Skeleton variant="rectangular" width={80} height={36} />
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+      ))}
+    </Box>
+  );
+
+  const renderRestaurantContent = () => (
+    <Box className="restaurant-info-container">
+      <Box className="restaurant-image-section">
+        <Box className="restaurant-image-wrapper">
+          <img
+            src={get_restImg(restaurant?.id || 0)}
+            alt={restaurant?.name}
+            className="restaurant-main-image"
+          />
+          <Chip label="🍔 Delivery" className="specialty-chip" />
+        </Box>
+      </Box>
+
+      <Box className="restaurant-details-section">
+        <Box className="restaurant-title-container">
+          <Box className="restaurant-title-wrapper">
+            <Typography variant="h4" className="restaurant-name">
+              {restaurant?.name}
+            </Typography>
+            <Typography variant="body1" className="restaurant-category">
+              {restaurant?.description}
+            </Typography>
+            <Typography variant="body1" className="restaurant-category">
+              Dirección: {restaurant?.address}
+            </Typography>
+            <Box className="restaurant-rating-container">
+              <Box className="rating-wrapper">
+                <Rating value={4.5} precision={0.1} readOnly />
+                <Typography variant="body2" className="rating-text">
+                  {4.5}
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+
+          <IconButton className="favorite-button">
+            <FavoriteIcon />
+          </IconButton>
+        </Box>
+
+        <Box className="delivery-info-container">
+          <Box className="delivery-info-item">
+            <Box className="delivery-icon-text">
+              <AccessTimeIcon className="delivery-icon" />
+              <Box>
+                <Typography variant="caption" className="delivery-label">
+                  Tiempo
+                </Typography>
+                <Typography variant="body2" className="delivery-value">
+                  20 - 30 min aprox.
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+
+          <Box className="delivery-info-item">
+            <Box className="delivery-icon-text">
+              <LocalShippingIcon className="delivery-icon" />
+              <Box>
+                <Typography variant="caption" className="delivery-label">
+                  Envío
+                </Typography>
+                <Typography variant="body2" className="delivery-value">
+                  Gratis
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+
+  const renderProductsContent = () => (
+    <Box className="products-grid">
+      {products_rest.map((product) => (
+        <Box className="product-item" key={product.id}>
+          <Card className="product-card">
+            <Box className="product-image-container">
+              <img
+                src={get_ProdImg(product.id)}
+                alt={product.name}
+                className="product-image"
+              />
+
+              <Chip
+                label="🔥 Envío gratis"
+                size="small"
+                className="popular-chip"
+              />
+            </Box>
+
+            <CardContent className="product-card-content">
+              <Box className="product-header">
+                <Typography variant="h6" className="product-name">
+                  {product.name}
+                </Typography>
+                <Typography variant="h6" className="product-price">
+                  ${product.price}
+                </Typography>
+              </Box>
+              <Box className="product-description-container">
+                <Typography variant="body2" className="product-description">
+                  {product.description}
+                </Typography>
+              </Box>
+
+              <Box className="product-footer">
+                <Box className="product-rating">
+                  <StarIcon className="star-icon" />
+                  <Typography variant="body2" className="rating-value">
+                    {product.id % 2 == 0 ? "4.6" : "4.2"}
                   </Typography>
-                  <Typography variant="body1" sx={{ color: '#666666', mb: 2 }}>
-                    {restaurant.category}
-                  </Typography>
-                  
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Rating value={restaurant.rating} precision={0.1} readOnly />
-                      <Typography variant="body2" sx={{ color: '#666666', ml: 1 }}>
-                        {restaurant.rating} ({restaurant.reviewCount} reviews)
-                      </Typography>
-                    </Box>
-                  </Box>
                 </Box>
 
-                <IconButton>
-                  <FavoriteIcon sx={{ color: '#999999' }} />
-                </IconButton>
+                <Button size="small" variant="contained" className="add-button">
+                  Agregar
+                </Button>
               </Box>
+            </CardContent>
+          </Card>
+        </Box>
+      ))}
+    </Box>
+  );
 
-              <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={6} sm={3}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <AccessTimeIcon sx={{ color: '#D70F64' }} />
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#666666', display: 'block' }}>
-                        Tiempo
-                      </Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                        {restaurant.deliveryTime}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <LocalShippingIcon sx={{ color: '#D70F64' }} />
-                    <Box>
-                      <Typography variant="caption" sx={{ color: '#666666', display: 'block' }}>
-                        Envío
-                      </Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                        {restaurant.deliveryFee}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Grid>
-              </Grid>
-
-              <Typography variant="body2" sx={{ color: '#666666', mb: 2 }}>
-                {restaurant.description}
-              </Typography>
-
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {restaurant.tags.map((tag, index) => (
-                  <Chip
-                    key={index}
-                    label={tag}
-                    size="small"
-                    sx={{
-                      backgroundColor: '#f8f9fa',
-                      color: '#666666',
-                      border: '1px solid #e0e0e0',
-                    }}
-                  />
-                ))}
-              </Box>
-            </Grid>
-          </Grid>
+  return (
+    <Box className="restaurant-detail-container">
+      <Box className="restaurant-header_detail">
+        <Container maxWidth="lg">
+          {loading_rest
+            ? renderRestaurantSkeleton()
+            : renderRestaurantContent()}
         </Container>
-      </RestaurantHeader>
+      </Box>
 
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Typography variant="h5" sx={{ fontWeight: 700, mb: 3, color: '#c6c6c6ff' }}>
+      <Container maxWidth="lg" className="products-container">
+        <Typography variant="h5" className="featured-products-title">
           Productos Destacados
         </Typography>
-        
-        <Grid container spacing={3}>
-          {products.map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product.id}>
-              <ProductCard>
-                <ProductImageContainer>
-                  <ProductImage
-                    src={product.image}
-                    alt={product.name}
-                  />
-                  {product.popular && (
-                    <Chip
-                      label="🔥 Popular"
-                      size="small"
-                      sx={{
-                        position: 'absolute',
-                        top: 8,
-                        left: 8,
-                        backgroundColor: '#FF8000',
-                        color: '#ffffff',
-                        fontWeight: 600,
-                      }}
-                    />
-                  )}
-                </ProductImageContainer>
 
-                <CardContent sx={{ 
-                  flexGrow: 1, 
-                  display: 'flex', 
-                  flexDirection: 'column',
-                  p: 2 
-                }}>
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'flex-start', 
-                    mb: 1,
-                    minHeight: '48px'
-                  }}>
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        fontWeight: 600, 
-                        fontSize: '1rem',
-                        lineHeight: 1.2,
-                        maxWidth: '60%'
-                      }}
-                    >
-                      {product.name}
-                    </Typography>
-                    <Typography variant="h6" sx={{ color: '#D70F64', fontWeight: 700 }}>
-                      ${product.price}
-                    </Typography>
-                  </Box>
-                  <Box sx={{ mb: 2, flexGrow: 1, minHeight: '48px' }}>
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        color: '#666666', 
-                        fontSize: '0.9rem',
-                        lineHeight: 1.4,
-                      }}
-                    >
-                      {product.description}
-                    </Typography>
-                  </Box>
-
-          
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    alignItems: 'center',
-                    mt: 'auto'
-                  }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <StarIcon sx={{ fontSize: '1rem', color: '#FFD700', mr: 0.5 }} />
-                      <Typography variant="body2" sx={{ color: '#666666' }}>
-                        {product.rating}
-                      </Typography>
-                    </Box>
-                    
-                    <Button
-                      size="small"
-                      variant="contained"
-                      sx={{
-                        backgroundColor: '#D70F64',
-                        color: '#ffffff',
-                        borderRadius: '20px',
-                        textTransform: 'none',
-                        fontWeight: 500,
-                        minWidth: '100px', 
-                        '&:hover': {
-                          backgroundColor: '#FF8000',
-                        },
-                      }}
-                    >
-                      Agregar
-                    </Button>
-                  </Box>
-                </CardContent>
-              </ProductCard>
-            </Grid>
-          ))}
-        </Grid>
+        {loading_prod ? renderProductsSkeleton() : renderProductsContent()}
       </Container>
-      <Footer/>
+      <Footer />
     </Box>
   );
 };
