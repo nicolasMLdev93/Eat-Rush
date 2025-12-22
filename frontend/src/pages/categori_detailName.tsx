@@ -27,7 +27,7 @@ const CategoryDetail_Name: React.FC = () => {
   const [products, setProducts] = useState<ProductApi[]>([]);
   const [loadingCat, setLoadingCat] = useState<boolean>(true);
   const [loadingProd, setLoadingProd] = useState<boolean>(true);
-  const [id_cat, setid_cat] = useState<number | undefined>(undefined);
+  const [id_category, setid_category] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -37,43 +37,40 @@ const CategoryDetail_Name: React.FC = () => {
 
   useEffect(() => {
     setLoadingCat(true);
-    if (!name) {
-      setLoadingProd(false);
-      setCategory(null)
-      setid_cat(undefined)
-      setProducts([]);
-      return;
+    if (name) {
+      get_categoriesByName(name)
+        .then((response) => {
+          if (response) {
+            setCategory(response);
+            setid_category(response.id);
+          }
+        })
+        .catch((err) => {
+          console.log("Error getting category by name", err);
+        })
+        .finally(() => {
+          setLoadingCat(false);
+        });
     }
-    get_categoriesByName(name)
-      .then((response) => {
-        if (response) {
-          setCategory(response);
-          setid_cat(response.id);
-        }
-      })
-      .catch((err) => {
-        console.log("Error getting category by name", err);
-      })
-      .finally(() => {
-        setLoadingCat(false);
-      });
   }, [name]);
 
   useEffect(() => {
     setLoadingProd(true);
-    get_productsByCat(id_cat)
-      .then((response) => {
-        if (response) {
-          setProducts(response);
-        }
-      })
-      .catch((err) => {
-        console.log("Error getting products by category", err);
-      })
-      .finally(() => {
-        setLoadingProd(false);
-      });
-  }, [id_cat]);
+    if (id_category) {
+      get_productsByCat(id_category)
+        .then((response) => {
+          if (response) {
+            setProducts(response);
+          }
+        })
+        .catch((err) => {
+          console.log("Error getting products by category", err);
+        })
+        .finally(() => {
+          setLoadingProd(false);
+        });
+    }
+  }, [id_category]);
 
   const getCatIcon = (id: number) => {
     const icon = category_images.find((cat) => cat.id == id);

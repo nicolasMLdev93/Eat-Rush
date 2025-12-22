@@ -25,7 +25,7 @@ import type { RestaurantApi, ProductApi } from "../interfaces/interfaces";
 import "../styles/rest_detail.css";
 
 const RestaurantDetail: React.FC = () => {
-  const { id } = useParams();
+  const { id_rest } = useParams();
   const [restaurant, setrestaurant] = useState<RestaurantApi | null>(null);
   const [products_rest, setproducts_rest] = useState<ProductApi[]>([]);
   const [loading_rest, setloading_rest] = useState<boolean>(true);
@@ -39,7 +39,7 @@ const RestaurantDetail: React.FC = () => {
 
   useEffect(() => {
     setloading_rest(true);
-    get_restaurantsById(id)
+    get_restaurantsById(id_rest)
       .then((response) => {
         if (response) {
           setrestaurant(response);
@@ -51,11 +51,11 @@ const RestaurantDetail: React.FC = () => {
       .finally(() => {
         setloading_rest(false);
       });
-  }, [id]);
+  }, [id_rest]);
 
   useEffect(() => {
     setloading_prod(true);
-    get_productsByRest(id)
+    get_productsByRest(id_rest)
       .then((response) => {
         if (response) {
           setproducts_rest(response);
@@ -67,7 +67,7 @@ const RestaurantDetail: React.FC = () => {
       .finally(() => {
         setloading_prod(false);
       });
-  }, [id]);
+  }, [id_rest]);
 
   const get_restImg = (id: number) => {
     const img = restaurants_images.find((rest) => rest.id == id);
