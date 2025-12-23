@@ -45,13 +45,16 @@ const RestaurantDetail_Name: React.FC = () => {
     if (name_rest) {
       get_restaurantByName(name_rest)
         .then((response) => {
-          if (response) {
+          if (!response) {
+            window.location.replace("/");
+          } else {
             setrestaurant(response);
             setid_restaurant(response.id);
           }
         })
         .catch((err) => {
           console.log("Error getting restaurant by id", err);
+          window.location.replace("/");
         })
         .finally(() => {
           setloading_rest(false);
@@ -70,6 +73,7 @@ const RestaurantDetail_Name: React.FC = () => {
         })
         .catch((err) => {
           console.log("Error getting products by restaurant", err);
+          window.location.replace("/");
         })
         .finally(() => {
           setloading_prod(false);

@@ -3,7 +3,7 @@ import '../styles/cart.css';
 import Footer from '../components/footer';
 
 const Cart = () => {
-  // Datos de ejemplo del carrito
+  
   const cartItems = [
     {
       id: 1,
@@ -31,16 +31,16 @@ const Cart = () => {
     }
   ];
 
-  // Calcular totales
+ 
   const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   const deliveryFee = 2.99;
-  const tax = subtotal * 0.08; // 8% de impuestos
+  const tax = subtotal * 0.08; 
   const total = subtotal + deliveryFee + tax;
 
   return (
     <div className="cart-container">
       <div className="cart-content">
-        {/* Header */}
+       
         <div className="cart-header">
           <h1 className="cart-title">
             <span className="cart-icon">🛒</span>
@@ -51,7 +51,7 @@ const Cart = () => {
           </p>
         </div>
 
-        {/* Lista de productos */}
+   
         <div className="cart-items">
           {cartItems.map((item) => (
             <div key={item.id} className="cart-item">
@@ -87,7 +87,7 @@ const Cart = () => {
           ))}
         </div>
 
-        {/* Resumen del pedido */}
+  
         <div className="order-summary">
           <h2 className="summary-title">Resumen del Pedido</h2>
           

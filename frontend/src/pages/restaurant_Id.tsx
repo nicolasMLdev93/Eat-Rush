@@ -42,12 +42,15 @@ const RestaurantDetail_ID: React.FC = () => {
     if (id_rest) {
       get_restaurantsById(id_rest)
         .then((response) => {
-          if (response) {
+          if (!response) {
+            window.location.replace("/");
+          } else {
             setrestaurant(response);
           }
         })
         .catch((err) => {
           console.log("Error getting restaurant by id", err);
+          window.location.replace("/");
         })
         .finally(() => {
           setloading_rest(false);

@@ -20,6 +20,7 @@ import get_categoriesById from "../services/get_categorieID";
 import get_productsByCat from "../services/get_productsCat";
 import { products_images, category_images } from "../data/images";
 import type { CategoryApi, ProductApi } from "../interfaces/interfaces";
+import { useNavigate } from "react-router-dom";
 import "../styles/cat_detail.css";
 
 const CategoryDetail_ID: React.FC = () => {
@@ -28,6 +29,7 @@ const CategoryDetail_ID: React.FC = () => {
   const [products, setProducts] = useState<ProductApi[]>([]);
   const [loadingCat, setLoadingCat] = useState<boolean>(true);
   const [loadingProd, setLoadingProd] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -40,12 +42,15 @@ const CategoryDetail_ID: React.FC = () => {
     if (id_cat) {
       get_categoriesById(id_cat)
         .then((response) => {
-          if (response) {
+          if (!response) {
+            window.location.replace("/");
+          } else {
             setCategory(response);
           }
         })
         .catch((err) => {
           console.log("Error getting category by id", err);
+          window.location.replace("/");
         })
         .finally(() => {
           setLoadingCat(false);
@@ -200,6 +205,10 @@ const CategoryDetail_ID: React.FC = () => {
               asegurando que cada elección sea una experiencia gastronómica
               memorable. Desde lo clásico hasta lo innovador, todo al alcance de
               un clic.
+            </p>
+            <p className="featured-products-title">
+              Un repartidor recoge tu pedido de todos los locales y te lo lleva
+              directamente a casa. 🛵📦🍕📍
             </p>
           </Box>
 

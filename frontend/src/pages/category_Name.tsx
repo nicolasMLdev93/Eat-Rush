@@ -40,13 +40,16 @@ const CategoryDetail_Name: React.FC = () => {
     if (name_cat) {
       get_categoriesByName(name_cat)
         .then((response) => {
-          if (response) {
+          if (!response) {
+            window.location.replace("/");
+          } else {
             setCategory(response);
             setid_category(response.id);
           }
         })
         .catch((err) => {
           console.log("Error getting category by name", err);
+          window.location.replace("/");
         })
         .finally(() => {
           setLoadingCat(false);
@@ -194,6 +197,14 @@ const CategoryDetail_Name: React.FC = () => {
             <Typography variant="h4" className="category-name">
               {category?.name}
             </Typography>
+            <p className="featured-products-title">
+              Sumérgete en el universo de {category?.name.toLowerCase()} donde
+              la calidad se encuentra con la variedad. Hemos reunido los
+              productos más destacados de establecimientos verificados,
+              asegurando que cada elección sea una experiencia gastronómica
+              memorable. Desde lo clásico hasta lo innovador, todo al alcance de
+              un clic.
+            </p>
             <p className="featured-products-title">
               Sumérgete en el universo de {category?.name.toLowerCase()} donde
               la calidad se encuentra con la variedad. Hemos reunido los
