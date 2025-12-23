@@ -7,27 +7,32 @@ import {
   CardContent,
   Chip,
   IconButton,
+  Rating,
   Button,
   Skeleton,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import Footer from "../components/footer";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import get_categoriesByName from "../services/get_categoriesName";
-import get_productsByCat from "../services/get_productsCat";
-import { products_images, category_images } from "../data/images";
-import type { CategoryApi, ProductApi } from "../interfaces/interfaces";
-import "../styles/cat_detail.css";
+import get_restaurantByName from "../services/get_restaurantName";
+import get_productsByRest from "../services/get_productsRest";
+import { restaurants_images, products_images } from "../data/images";
+import type { RestaurantApi, ProductApi } from "../interfaces/interfaces";
+import "../styles/rest_detail.css";
 
-const CategoryDetail_Name: React.FC = () => {
-  const { name } = useParams();
-  const [category, setCategory] = useState<CategoryApi | null>(null);
-  const [products, setProducts] = useState<ProductApi[]>([]);
-  const [loadingCat, setLoadingCat] = useState<boolean>(true);
-  const [loadingProd, setLoadingProd] = useState<boolean>(true);
-  const [id_category, setid_category] = useState<number | undefined>(undefined);
+const RestaurantDetail_Name: React.FC = () => {
+  const { name_rest } = useParams();
+  const [restaurant, setrestaurant] = useState<RestaurantApi | null>(null);
+  const [products_rest, setproducts_rest] = useState<ProductApi[]>([]);
+  const [loading_rest, setloading_rest] = useState<boolean>(true);
+  const [loading_prod, setloading_prod] = useState<boolean>(true);
+  const [id_restaurant, setid_restaurant] = useState<number | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -36,56 +41,56 @@ const CategoryDetail_Name: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setLoadingCat(true);
-    if (name) {
-      get_categoriesByName(name)
+    setloading_rest(true);
+    if (name_rest) {
+      get_restaurantByName(name_rest)
         .then((response) => {
           if (response) {
-            setCategory(response);
-            setid_category(response.id);
+            setrestaurant(response);
+            setid_restaurant(response.id);
           }
         })
         .catch((err) => {
-          console.log("Error getting category by name", err);
+          console.log("Error getting restaurant by id", err);
         })
         .finally(() => {
-          setLoadingCat(false);
+          setloading_rest(false);
         });
     }
-  }, [name]);
+  }, [name_rest]);
 
   useEffect(() => {
-    setLoadingProd(true);
-    if (id_category) {
-      get_productsByCat(id_category)
+    setloading_prod(true);
+    if (id_restaurant) {
+      get_productsByRest(id_restaurant)
         .then((response) => {
           if (response) {
-            setProducts(response);
+            setproducts_rest(response);
           }
         })
         .catch((err) => {
-          console.log("Error getting products by category", err);
+          console.log("Error getting products by restaurant", err);
         })
         .finally(() => {
-          setLoadingProd(false);
+          setloading_prod(false);
         });
     }
-  }, [id_category]);
+  }, [id_restaurant]);
 
-  const getCatIcon = (id: number) => {
-    const icon = category_images.find((cat) => cat.id == id);
-    return icon?.image;
+  const get_restImg = (id: number) => {
+    const img = restaurants_images.find((rest) => rest.id == id);
+    return img?.image;
   };
 
-  const getProdImg = (id: number) => {
+  const get_ProdImg = (id: number) => {
     const img = products_images.find((prod) => prod.id == id);
     return img?.image;
   };
 
-  const renderCategorySkeleton = () => (
-    <Box className="category-info-container">
-      <Box className="category-image-section">
-        <Box className="category-image-wrapper">
+  const renderRestaurantSkeleton = () => (
+    <Box className="restaurant-info-container">
+      <Box className="restaurant-image-section">
+        <Box className="restaurant-image-wrapper">
           <Skeleton
             variant="rectangular"
             width="100%"
@@ -96,13 +101,13 @@ const CategoryDetail_Name: React.FC = () => {
         </Box>
       </Box>
 
-      <Box className="category-details-section">
-        <Box className="category-title-container">
-          <Box className="category-title-wrapper">
+      <Box className="restaurant-details-section">
+        <Box className="restaurant-title-container">
+          <Box className="restaurant-title-wrapper">
             <Skeleton variant="text" width="80%" height={40} />
             <Skeleton variant="text" width="60%" height={24} />
             <Skeleton variant="text" width="70%" height={24} />
-            <Box className="category-rating-container">
+            <Box className="restaurant-rating-container">
               <Box className="rating-wrapper">
                 <Skeleton variant="text" width={120} height={32} />
               </Box>
@@ -111,9 +116,9 @@ const CategoryDetail_Name: React.FC = () => {
           <Skeleton variant="circular" width={40} height={40} />
         </Box>
 
-        <Box className="category-info-container">
-          <Box className="category-info-item">
-            <Box className="category-icon-text">
+        <Box className="delivery-info-container">
+          <Box className="delivery-info-item">
+            <Box className="delivery-icon-text">
               <Skeleton variant="circular" width={24} height={24} />
               <Box>
                 <Skeleton variant="text" width={60} height={20} />
@@ -122,8 +127,8 @@ const CategoryDetail_Name: React.FC = () => {
             </Box>
           </Box>
 
-          <Box className="category-info-item">
-            <Box className="category-icon-text">
+          <Box className="delivery-info-item">
+            <Box className="delivery-icon-text">
               <Skeleton variant="circular" width={24} height={24} />
               <Box>
                 <Skeleton variant="text" width={60} height={20} />
@@ -175,33 +180,39 @@ const CategoryDetail_Name: React.FC = () => {
     </Box>
   );
 
-  const renderCategoryContent = () => (
-    <Box className="category-info-container">
-      <Box className="category-image-section">
-        <Box className="category-image-wrapper">
+  const renderRestaurantContent = () => (
+    <Box className="restaurant-info-container">
+      <Box className="restaurant-image-section">
+        <Box className="restaurant-image-wrapper">
           <img
-            src={getCatIcon(category?.id || 0)}
-            alt={category?.name}
-            className="category-main-image"
+            src={get_restImg(restaurant?.id || 0)}
+            alt={restaurant?.name}
+            className="restaurant-main-image"
           />
-          <Chip label={`${category?.name}`} className="category-chip" />
+          <Chip label="🍔 Delivery" className="specialty-chip" />
         </Box>
       </Box>
 
-      <Box className="category-details-section">
-        <Box className="category-title-container">
-          <Box className="category-title-wrapper">
-            <Typography variant="h4" className="category-name">
-              {category?.name}
+      <Box className="restaurant-details-section">
+        <Box className="restaurant-title-container">
+          <Box className="restaurant-title-wrapper">
+            <Typography variant="h4" className="restaurant-name">
+              {restaurant?.name}
             </Typography>
-            <p className="featured-products-title">
-              Sumérgete en el universo de {category?.name.toLowerCase()} donde
-              la calidad se encuentra con la variedad. Hemos reunido los
-              productos más destacados de establecimientos verificados,
-              asegurando que cada elección sea una experiencia gastronómica
-              memorable. Desde lo clásico hasta lo innovador, todo al alcance de
-              un clic.
-            </p>
+            <Typography variant="body1" className="restaurant-category">
+              {restaurant?.description}
+            </Typography>
+            <Typography variant="body1" className="restaurant-category">
+              Dirección: {restaurant?.address}
+            </Typography>
+            <Box className="restaurant-rating-container">
+              <Box className="rating-wrapper">
+                <Rating value={4.5} precision={0.1} readOnly />
+                <Typography variant="body2" className="rating-text">
+                  {4.5}
+                </Typography>
+              </Box>
+            </Box>
           </Box>
 
           <IconButton className="favorite-button">
@@ -209,25 +220,54 @@ const CategoryDetail_Name: React.FC = () => {
           </IconButton>
         </Box>
 
-        <Box className="category-info-container"></Box>
+        <Box className="delivery-info-container">
+          <Box className="delivery-info-item">
+            <Box className="delivery-icon-text">
+              <AccessTimeIcon className="delivery-icon" />
+              <Box>
+                <Typography variant="caption" className="delivery-label">
+                  Tiempo
+                </Typography>
+                <Typography variant="body2" className="delivery-value">
+                  20 - 30 min aprox.
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+
+          <Box className="delivery-info-item">
+            <Box className="delivery-icon-text">
+              <LocalShippingIcon className="delivery-icon" />
+              <Box>
+                <Typography variant="caption" className="delivery-label">
+                  Envío
+                </Typography>
+                <Typography variant="body2" className="delivery-value">
+                  Gratis
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
 
   const renderProductsContent = () => (
     <Box className="products-grid">
-      {products.length === 0 ? (
-        <p>No hay productos registrados con dicha categoría</p>
+      {products_rest.length === 0 ? (
+        <p>No hay productos registrados en el restaurante</p>
       ) : (
-        products.map((product) => (
+        products_rest.map((product) => (
           <Box className="product-item" key={product.id}>
             <Card className="product-card">
               <Box className="product-image-container">
                 <img
-                  src={getProdImg(product.id)}
+                  src={get_ProdImg(product.id)}
                   alt={product.name}
                   className="product-image"
                 />
+
                 <Chip label="🔥 Promo" size="small" className="popular-chip" />
               </Box>
 
@@ -250,7 +290,7 @@ const CategoryDetail_Name: React.FC = () => {
                   <Box className="product-rating">
                     <StarIcon className="star-icon" />
                     <Typography variant="body2" className="rating-value">
-                      {product.id % 2 === 0 ? "4.6" : "4.2"}
+                      {product.id % 2 == 0 ? "4.6" : "4.2"}
                     </Typography>
                   </Box>
 
@@ -271,23 +311,25 @@ const CategoryDetail_Name: React.FC = () => {
   );
 
   return (
-    <Box className="category-detail-container">
-      <Box className="category-header">
+    <Box className="restaurant-detail-container">
+      <Box className="restaurant-header_detail">
         <Container maxWidth="lg">
-          {loadingCat ? renderCategorySkeleton() : renderCategoryContent()}
+          {loading_rest
+            ? renderRestaurantSkeleton()
+            : renderRestaurantContent()}
         </Container>
       </Box>
 
       <Container maxWidth="lg" className="products-container">
         <Typography variant="h5" className="featured-products-title">
-          Productos de {category?.name}
+          Productos Destacados
         </Typography>
 
-        {loadingProd ? renderProductsSkeleton() : renderProductsContent()}
+        {loading_prod ? renderProductsSkeleton() : renderProductsContent()}
       </Container>
       <Footer />
     </Box>
   );
 };
 
-export default CategoryDetail_Name;
+export default RestaurantDetail_Name;

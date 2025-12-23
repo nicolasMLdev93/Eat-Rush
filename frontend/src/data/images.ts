@@ -28,6 +28,12 @@ import asiatica_cat from "../images/asiatica_cat.jpg";
 import ensaladas_cat from "../images/ensalada_cat.jpg";
 import postres_cat from "../images/postres_cat.jpg";
 import bebidas_cat from "../images/bebidas_cat.jpg";
+import react_icon from "../icons/icons8-reaccionar-96.png";
+import ts_icon from "../icons/icons8-mecanografiado-96.png";
+import node_icon from "../icons/icons8-nodo-js-96.png";
+import express_icon from "../icons/icons8-expresar-js-96.png";
+import mui_icon from "../icons/icons8-material-ui-96.png";
+import mysql_icon from "../icons/icons8-mysql-96.png";
 
 interface Rest_images {
   id: number;
@@ -45,6 +51,11 @@ interface Cat_img {
 }
 
 interface Products_images {
+  id: number;
+  image: string;
+}
+
+interface Tech_images {
   id: number;
   image: string;
 }
@@ -98,10 +109,20 @@ const category_images: Cat_img[] = [
   { id: 7, image: bebidas_cat },
 ];
 
-export type { Rest_images, Cat_icon, Products_images };
+const technology_icons: Tech_images[] = [
+  { id: 1, image: react_icon },
+  { id: 2, image: ts_icon },
+  { id: 3, image: node_icon },
+  { id: 4, image: express_icon },
+  { id: 5, image: mysql_icon },
+  { id: 6, image: mui_icon },
+];
+
+export type { Rest_images, Cat_icon, Products_images, Tech_images };
 export {
   restaurants_images,
   categories_icons,
   products_images,
   category_images,
+  technology_icons,
 };

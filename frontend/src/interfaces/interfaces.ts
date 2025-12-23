@@ -33,6 +33,12 @@ interface ApiResponse_category_ID {
   success: boolean;
 }
 
+interface Technology {
+  name: string;
+  image: string;
+  color: string;
+}
+
 interface ProductApi {
   id: number;
   name: string;
@@ -56,5 +62,4 @@ export type {
   ProductApi,
   ApiResponse_product,
   ApiResponse_restaurant_ID,
-  ApiResponse_category_ID,
-};
+  ApiResponse_category_ID,Technology

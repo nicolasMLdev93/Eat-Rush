@@ -24,7 +24,7 @@ import { restaurants_images, products_images } from "../data/images";
 import type { RestaurantApi, ProductApi } from "../interfaces/interfaces";
 import "../styles/rest_detail.css";
 
-const RestaurantDetail: React.FC = () => {
+const RestaurantDetail_ID: React.FC = () => {
   const { id_rest } = useParams();
   const [restaurant, setrestaurant] = useState<RestaurantApi | null>(null);
   const [products_rest, setproducts_rest] = useState<ProductApi[]>([]);
@@ -39,34 +39,38 @@ const RestaurantDetail: React.FC = () => {
 
   useEffect(() => {
     setloading_rest(true);
-    get_restaurantsById(id_rest)
-      .then((response) => {
-        if (response) {
-          setrestaurant(response);
-        }
-      })
-      .catch((err) => {
-        console.log("Error getting restaurant by id", err);
-      })
-      .finally(() => {
-        setloading_rest(false);
-      });
+    if (id_rest) {
+      get_restaurantsById(id_rest)
+        .then((response) => {
+          if (response) {
+            setrestaurant(response);
+          }
+        })
+        .catch((err) => {
+          console.log("Error getting restaurant by id", err);
+        })
+        .finally(() => {
+          setloading_rest(false);
+        });
+    }
   }, [id_rest]);
 
   useEffect(() => {
     setloading_prod(true);
-    get_productsByRest(id_rest)
-      .then((response) => {
-        if (response) {
-          setproducts_rest(response);
-        }
-      })
-      .catch((err) => {
-        console.log("Error getting restaurant by id", err);
-      })
-      .finally(() => {
-        setloading_prod(false);
-      });
+    if (id_rest) {
+      get_productsByRest(id_rest)
+        .then((response) => {
+          if (response) {
+            setproducts_rest(response);
+          }
+        })
+        .catch((err) => {
+          console.log("Error getting restaurant by id", err);
+        })
+        .finally(() => {
+          setloading_prod(false);
+        });
+    }
   }, [id_rest]);
 
   const get_restImg = (id: number) => {
@@ -247,54 +251,58 @@ const RestaurantDetail: React.FC = () => {
 
   const renderProductsContent = () => (
     <Box className="products-grid">
-      {products_rest.map((product) => (
-        <Box className="product-item" key={product.id}>
-          <Card className="product-card">
-            <Box className="product-image-container">
-              <img
-                src={get_ProdImg(product.id)}
-                alt={product.name}
-                className="product-image"
-              />
+      {products_rest.length === 0 ? (
+        <p>No hay productos registrados en el restaurante</p>
+      ) : (
+        products_rest.map((product) => (
+          <Box className="product-item" key={product.id}>
+            <Card className="product-card">
+              <Box className="product-image-container">
+                <img
+                  src={get_ProdImg(product.id)}
+                  alt={product.name}
+                  className="product-image"
+                />
 
-              <Chip
-                label="🔥 Promo"
-                size="small"
-                className="popular-chip"
-              />
-            </Box>
-
-            <CardContent className="product-card-content">
-              <Box className="product-header">
-                <Typography variant="h6" className="product-name">
-                  {product.name}
-                </Typography>
-                <Typography variant="h6" className="product-price">
-                  ${product.price}
-                </Typography>
-              </Box>
-              <Box className="product-description-container">
-                <Typography variant="body2" className="product-description">
-                  {product.description}
-                </Typography>
+                <Chip label="🔥 Promo" size="small" className="popular-chip" />
               </Box>
 
-              <Box className="product-footer">
-                <Box className="product-rating">
-                  <StarIcon className="star-icon" />
-                  <Typography variant="body2" className="rating-value">
-                    {product.id % 2 == 0 ? "4.6" : "4.2"}
+              <CardContent className="product-card-content">
+                <Box className="product-header">
+                  <Typography variant="h6" className="product-name">
+                    {product.name}
+                  </Typography>
+                  <Typography variant="h6" className="product-price">
+                    ${product.price}
+                  </Typography>
+                </Box>
+                <Box className="product-description-container">
+                  <Typography variant="body2" className="product-description">
+                    {product.description}
                   </Typography>
                 </Box>
 
-                <Button size="small" variant="contained" className="add-button">
-                  Agregar
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        </Box>
-      ))}
+                <Box className="product-footer">
+                  <Box className="product-rating">
+                    <StarIcon className="star-icon" />
+                    <Typography variant="body2" className="rating-value">
+                      {product.id % 2 == 0 ? "4.6" : "4.2"}
+                    </Typography>
+                  </Box>
+
+                  <Button
+                    size="small"
+                    variant="contained"
+                    className="add-button"
+                  >
+                    Agregar
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+        ))
+      )}
     </Box>
   );
 
@@ -320,4 +328,4 @@ const RestaurantDetail: React.FC = () => {
   );
 };
 
-export default RestaurantDetail;
+export default RestaurantDetail_ID;
