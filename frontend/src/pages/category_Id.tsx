@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Container,
@@ -9,18 +9,20 @@ import {
   IconButton,
   Button,
   Skeleton,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
 import Footer from "../components/footer";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import get_categoriesById from "../services/get_categorieID";
 import get_productsByCat from "../services/get_productsCat";
 import { products_images, category_images } from "../data/images";
 import type { CategoryApi, ProductApi } from "../interfaces/interfaces";
 import "../styles/cat_detail.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { add_product } from "../cart/app_slice";
 
 const CategoryDetail_ID: React.FC = () => {
@@ -29,6 +31,15 @@ const CategoryDetail_ID: React.FC = () => {
   const [products, setProducts] = useState<ProductApi[]>([]);
   const [loadingCat, setLoadingCat] = useState<boolean>(true);
   const [loadingProd, setLoadingProd] = useState<boolean>(true);
+  const [notification, setNotification] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error";
+  }>({
+    open: false,
+    message: "",
+    severity: "success",
+  });
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -90,7 +101,17 @@ const CategoryDetail_ID: React.FC = () => {
     const productToAdd = products.find((product) => product.id === id);
     if (productToAdd) {
       dispatch(add_product(productToAdd));
+
+      setNotification({
+        open: true,
+        message: `¡${productToAdd.name} agregado al carrito!`,
+        severity: "success",
+      });
     }
+  };
+
+  const handleCloseNotification = () => {
+    setNotification({ ...notification, open: false });
   };
 
   const renderCategorySkeleton = () => (
@@ -302,6 +323,21 @@ const CategoryDetail_ID: React.FC = () => {
         {loadingProd ? renderProductsSkeleton() : renderProductsContent()}
       </Container>
       <Footer />
+
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={1000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseNotification}
+          severity={notification.severity}
+          sx={{ width: "100%" }}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Container,
@@ -10,19 +10,23 @@ import {
   Rating,
   Button,
   Skeleton,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import StarIcon from "@mui/icons-material/Star";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import Footer from "../components/footer";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import get_restaurantsById from "../services/get_restaurantID";
 import get_productsByRest from "../services/get_productsRest";
 import { restaurants_images, products_images } from "../data/images";
 import type { RestaurantApi, ProductApi } from "../interfaces/interfaces";
 import "../styles/rest_detail.css";
+import { useDispatch } from "react-redux";
+import { add_product } from "../cart/app_slice";
 
 const RestaurantDetail_ID: React.FC = () => {
   const { id_rest } = useParams();
@@ -30,6 +34,17 @@ const RestaurantDetail_ID: React.FC = () => {
   const [products_rest, setproducts_rest] = useState<ProductApi[]>([]);
   const [loading_rest, setloading_rest] = useState<boolean>(true);
   const [loading_prod, setloading_prod] = useState<boolean>(true);
+  const [notification, setNotification] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error";
+  }>({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+  
+  const dispatch = useDispatch();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -84,6 +99,19 @@ const RestaurantDetail_ID: React.FC = () => {
   const get_ProdImg = (id: number) => {
     const img = products_images.find((prod) => prod.id == id);
     return img?.image;
+  };
+
+  const handleAddItem = (product: ProductApi) => {
+    dispatch(add_product(product));
+    setNotification({
+      open: true,
+      message: `¡${product.name} agregado al carrito!`,
+      severity: "success",
+    });
+  };
+
+  const handleCloseNotification = () => {
+    setNotification({ ...notification, open: false });
   };
 
   const renderRestaurantSkeleton = () => (
@@ -294,6 +322,7 @@ const RestaurantDetail_ID: React.FC = () => {
                   </Box>
 
                   <Button
+                    onClick={() => handleAddItem(product)}
                     size="small"
                     variant="contained"
                     className="add-button"
@@ -327,6 +356,21 @@ const RestaurantDetail_ID: React.FC = () => {
         {loading_prod ? renderProductsSkeleton() : renderProductsContent()}
       </Container>
       <Footer />
+
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={1000} 
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseNotification}
+          severity={notification.severity}
+          sx={{ width: "100%" }}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

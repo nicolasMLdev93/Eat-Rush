@@ -69,6 +69,7 @@ interface Cart_state {
   cart: Product_cart[];
   total: number;
   logged: boolean;
+  total_products:number;
 }
 
 export type {

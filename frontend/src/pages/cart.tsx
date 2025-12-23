@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/cart.css";
 import Footer from "../components/footer";
 import { products_images } from "../data/images";
@@ -13,18 +13,72 @@ import {
   login_user,
   logout_user,
 } from "../cart/app_slice";
+import {
+  Snackbar,
+  Alert,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+} from "@mui/material";
 
 const Cart: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
-  const { cart, total, logged } = useSelector((state) => state.cart);
-  console.log(cart)
-  console.log(total)
+
+  const { cart, total, logged,total_products } = useSelector((state) => state.cart);
+
+  const [notification, setNotification] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "error" | "info" | "warning";
+  }>({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  }>({
+    open: false,
+    title: "",
+    message: "",
+    onConfirm: () => {},
+  });
 
   const getProdImg = (id: number) => {
     const img = products_images.find((prod) => prod.id === id);
     return img?.image;
+  };
+
+  const showNotification = (
+    message: string,
+    severity: "success" | "error" | "info" | "warning"
+  ) => {
+    setNotification({
+      open: true,
+      message,
+      severity,
+    });
+  };
+
+  const showConfirmDialog = (
+    title: string,
+    message: string,
+    onConfirm: () => void
+  ) => {
+    setConfirmDialog({
+      open: true,
+      title,
+      message,
+      onConfirm,
+    });
   };
 
   const handleIncreaseQuantity = (id: number) => {
@@ -37,32 +91,45 @@ const Cart: React.FC = () => {
 
   const handleRemoveItem = (id: number) => {
     dispatch(delete_product({ id }));
+    showNotification("Producto eliminado del carrito", "success");
   };
 
   const handleClearCart = () => {
-    if (window.confirm("¿Estás seguro de que quieres vaciar el carrito?")) {
-      dispatch(clear_cart());
-    }
+    showConfirmDialog(
+      "Vaciar carrito",
+      "¿Estás seguro de que quieres vaciar el carrito?",
+      () => {
+        dispatch(clear_cart());
+        showNotification("Carrito vaciado", "success");
+      }
+    );
   };
 
+  console.log(total)
+  console.log(cart)
+  console.log(total_products)
+
   const handleContinueShopping = () => {
-    navigate("/"); 
+    navigate("/");
   };
 
   const handleCheckout = () => {
     if (cart.length === 0) {
-      alert("Tu carrito está vacío. Agrega productos antes de proceder al pago.");
+      showNotification(
+        "Tu carrito está vacío. Agrega productos antes de proceder al pago.",
+        "warning"
+      );
       return;
     }
-    
+
     if (!logged) {
-      const login = window.confirm(
-        "Debes iniciar sesión para proceder al pago. ¿Quieres iniciar sesión ahora?"
+      showConfirmDialog(
+        "Iniciar sesión",
+        "Debes iniciar sesión para proceder al pago. ¿Quieres iniciar sesión ahora?",
+        () => {
+          navigate("/login");
+        }
       );
-      if (login) {
-        navigate("/login");
-        return;
-      }
     } else {
       navigate("/checkout");
     }
@@ -70,18 +137,32 @@ const Cart: React.FC = () => {
 
   const handleLogin = () => {
     dispatch(login_user());
-    alert("Sesión iniciada (simulación)");
+    showNotification("Sesión iniciada (simulación)", "success");
   };
 
   const handleLogout = () => {
-    dispatch(logout_user());
-    alert("Sesión cerrada");
+    showConfirmDialog(
+      "Cerrar sesión",
+      "¿Estás seguro de que quieres cerrar sesión?",
+      () => {
+        dispatch(logout_user());
+        showNotification("Sesión cerrada", "info");
+      }
+    );
+  };
+
+  const handleCloseNotification = () => {
+    setNotification({ ...notification, open: false });
+  };
+
+  const handleCloseConfirmDialog = () => {
+    setConfirmDialog({ ...confirmDialog, open: false });
   };
 
   const subtotal = total;
   const tax = subtotal * 0.08;
   const total_price = subtotal + tax;
-  const shipping = subtotal > 50 ? 0 : 5.99; 
+  const shipping = subtotal > 50 ? 0 : 5.99;
 
   if (cart.length === 0) {
     return (
@@ -94,17 +175,11 @@ const Cart: React.FC = () => {
             </h1>
             <div className="auth-buttons">
               {logged ? (
-                <button 
-                  className="logout-btn"
-                  onClick={handleLogout}
-                >
+                <button className="logout-btn" onClick={handleLogout}>
                   Cerrar Sesión
                 </button>
               ) : (
-                <button 
-                  className="login-btn"
-                  onClick={handleLogin}
-                >
+                <button className="login-btn" onClick={handleLogin}>
                   Iniciar Sesión
                 </button>
               )}
@@ -115,11 +190,11 @@ const Cart: React.FC = () => {
             <div className="empty-cart-icon">🛒</div>
             <h2 className="empty-cart-title">Tu carrito está vacío</h2>
             <p className="empty-cart-message">
-              {logged 
+              {logged
                 ? "¡Hola de nuevo! Tu carrito está vacío, agrega algunos productos."
                 : "Parece que aún no has agregado productos a tu carrito. ¡Explora nuestros productos!"}
             </p>
-            <button 
+            <button
               className="continue-shopping-btn"
               onClick={handleContinueShopping}
             >
@@ -128,10 +203,7 @@ const Cart: React.FC = () => {
             {!logged && (
               <p className="login-suggestion">
                 ¿Tienes una cuenta?{" "}
-                <button 
-                  className="text-login-btn"
-                  onClick={handleLogin}
-                >
+                <button className="text-login-btn" onClick={handleLogin}>
                   Inicia sesión
                 </button>{" "}
                 para ver tu historial de compras.
@@ -140,6 +212,40 @@ const Cart: React.FC = () => {
           </div>
         </div>
         <Footer />
+
+        <Snackbar
+          open={notification.open}
+          autoHideDuration={1500}
+          onClose={handleCloseNotification}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        >
+          <Alert
+            onClose={handleCloseNotification}
+            severity={notification.severity}
+            sx={{ width: "100%" }}
+          >
+            {notification.message}
+          </Alert>
+        </Snackbar>
+
+        <Dialog open={confirmDialog.open} onClose={handleCloseConfirmDialog}>
+          <DialogTitle>{confirmDialog.title}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>{confirmDialog.message}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseConfirmDialog}>Cancelar</Button>
+            <Button
+              onClick={() => {
+                confirmDialog.onConfirm();
+                handleCloseConfirmDialog();
+              }}
+              autoFocus
+            >
+              Confirmar
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
@@ -154,32 +260,27 @@ const Cart: React.FC = () => {
               Tu Carrito
             </h1>
             <p className="cart-subtitle">
-              {cart.length} {cart.length === 1 ? "producto" : "productos"} en el carrito
+              {cart.length} {cart.length === 1 ? "producto" : "productos"} en el
+              carrito
             </p>
           </div>
-          
+
           <div className="cart-header-right">
             <div className="auth-status">
               {logged ? (
                 <>
                   <span className="user-status">👤 Conectado</span>
-                  <button 
-                    className="logout-btn small"
-                    onClick={handleLogout}
-                  >
+                  <button className="logout-btn small" onClick={handleLogout}>
                     Salir
                   </button>
                 </>
               ) : (
-                <button 
-                  className="login-btn small"
-                  onClick={handleLogin}
-                >
+                <button className="login-btn small" onClick={handleLogin}>
                   Iniciar Sesión
                 </button>
               )}
             </div>
-            <button 
+            <button
               className="clear-cart-btn"
               onClick={handleClearCart}
               title="Vaciar todo el carrito"
@@ -206,7 +307,9 @@ const Cart: React.FC = () => {
                     <p className="item-id">ID: {item.id}</p>
                   </div>
                   <div className="item-price-section">
-                    <span className="item-unit-price">${item.price.toFixed(2)} c/u</span>
+                    <span className="item-unit-price">
+                      ${item.price.toFixed(2)} c/u
+                    </span>
                     <span className="item-total-price">
                       ${(item.price * item.quantity).toFixed(2)}
                     </span>
@@ -220,7 +323,7 @@ const Cart: React.FC = () => {
                 <div className="item-controls">
                   <div className="quantity-section">
                     <div className="quantity-controls">
-                      <button 
+                      <button
                         className="quantity-btn minus"
                         onClick={() => handleDecreaseQuantity(item.id)}
                         disabled={item.quantity <= 1}
@@ -229,7 +332,7 @@ const Cart: React.FC = () => {
                         −
                       </button>
                       <span className="quantity">{item.quantity}</span>
-                      <button 
+                      <button
                         className="quantity-btn plus"
                         onClick={() => handleIncreaseQuantity(item.id)}
                         aria-label="Aumentar cantidad"
@@ -247,7 +350,7 @@ const Cart: React.FC = () => {
                     </span>
                   </div>
 
-                  <button 
+                  <button
                     className="remove-btn"
                     onClick={() => handleRemoveItem(item.id)}
                     title="Eliminar producto"
@@ -269,7 +372,10 @@ const Cart: React.FC = () => {
 
           <div className="summary-details">
             <div className="summary-row">
-              <span>Subtotal ({cart.reduce((acc, item) => acc + item.quantity, 0)} items)</span>
+              <span>
+                Subtotal ({cart.reduce((acc, item) => acc + item.quantity, 0)}{" "}
+                items)
+              </span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
 
@@ -307,7 +413,7 @@ const Cart: React.FC = () => {
           </div>
 
           <div className="summary-actions">
-            <button 
+            <button
               className="checkout-btn"
               onClick={handleCheckout}
               disabled={cart.length === 0}
@@ -315,10 +421,7 @@ const Cart: React.FC = () => {
               {logged ? "🛒 Proceder al Pago" : "🔐 Iniciar Sesión para Pagar"}
             </button>
 
-            <button 
-              className="continue-btn"
-              onClick={handleContinueShopping}
-            >
+            <button className="continue-btn" onClick={handleContinueShopping}>
               ← Seguir Comprando
             </button>
           </div>
@@ -327,12 +430,10 @@ const Cart: React.FC = () => {
             <div className="login-prompt">
               <p>
                 <span className="prompt-icon">🔐</span>
-                Inicia sesión para guardar tu carrito y acceder a ofertas exclusivas.
+                Inicia sesión para guardar tu carrito y acceder a ofertas
+                exclusivas.
               </p>
-              <button 
-                className="prompt-login-btn"
-                onClick={handleLogin}
-              >
+              <button className="prompt-login-btn" onClick={handleLogin}>
                 Iniciar Sesión
               </button>
             </div>
@@ -350,6 +451,40 @@ const Cart: React.FC = () => {
         </div>
       </div>
       <Footer />
+
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={1500}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseNotification}
+          severity={notification.severity}
+          sx={{ width: "100%" }}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
+
+      <Dialog open={confirmDialog.open} onClose={handleCloseConfirmDialog}>
+        <DialogTitle>{confirmDialog.title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{confirmDialog.message}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDialog}>Cancelar</Button>
+          <Button
+            onClick={() => {
+              confirmDialog.onConfirm();
+              handleCloseConfirmDialog();
+            }}
+            autoFocus
+          >
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

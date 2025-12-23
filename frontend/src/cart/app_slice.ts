@@ -5,6 +5,7 @@ const cart_state: Cart_state = {
   cart: [],
   total: 0,
   logged: false,
+  total_products: 0,
 };
 
 export const cartSlice = createSlice({
@@ -15,58 +16,62 @@ export const cartSlice = createSlice({
       const product = state.cart.find((prod) => prod.id === action.payload.id);
       if (product) {
         product.quantity += 1;
+        state.total += product.price;
+        state.total_products += 1;
       } else {
-        state.cart = [...state.cart, { ...action.payload, quantity: 1 }];
+        state.cart.push({ ...action.payload, quantity: 1 });
+        state.total_products += 1;
+        state.total += action.payload.price;
       }
-
-      state.total = state.cart.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-      );
     },
+
     delete_product: (state, action) => {
-      state.cart = state.cart.filter((prod) => prod.id !== action.payload.id);
-
-      state.total = state.cart.reduce(
-        (sum, item) => sum + item.price * item.quantity,
-        0
-      );
+      const product = state.cart.find((prod) => prod.id === action.payload.id);
+      if (product) {
+        state.total -= product.price * product.quantity;
+        state.total_products -= product.quantity;
+        state.cart = state.cart.filter((prod) => prod.id !== action.payload.id);
+      }
     },
+
     increase_quantity: (state, action) => {
       const product = state.cart.find((prod) => prod.id === action.payload.id);
       if (product) {
         product.quantity += 1;
-        state.total = state.cart.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0
-        );
+        state.total += product.price;
+        state.total_products += 1;
       }
     },
+
     decrease_quantity: (state, action) => {
       const product = state.cart.find((prod) => prod.id === action.payload.id);
       if (product) {
         if (product.quantity > 1) {
           product.quantity -= 1;
+          state.total -= product.price;
+          state.total_products -= 1;
         } else {
+          state.total -= product.price;
+          state.total_products -= 1;
           state.cart = state.cart.filter(
             (prod) => prod.id !== action.payload.id
           );
         }
-        state.total = state.cart.reduce(
-          (sum, item) => sum + item.price * item.quantity,
-          0
-        );
       }
     },
+
     login_user: (state) => {
       state.logged = true;
     },
+
     logout_user: (state) => {
       state.logged = false;
     },
+
     clear_cart: (state) => {
       state.cart = [];
       state.total = 0;
+      state.total_products = 0;
     },
   },
 });
