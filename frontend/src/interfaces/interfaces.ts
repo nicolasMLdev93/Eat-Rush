@@ -54,6 +54,23 @@ interface ApiResponse_product {
   success: boolean;
 }
 
+interface Product_cart {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  isAvailable: boolean;
+  categoryId: number;
+  restaurantId: number;
+  quantity: number;
+}
+
+interface Cart_state {
+  cart: Product_cart[];
+  total: number;
+  logged: boolean;
+}
+
 export type {
   RestaurantApi,
   CategoryApi,
@@ -62,4 +79,7 @@ export type {
   ProductApi,
   ApiResponse_product,
   ApiResponse_restaurant_ID,
-  ApiResponse_category_ID,Technology
+  ApiResponse_category_ID,
+  Technology,
+  Product_cart,Cart_state
+};

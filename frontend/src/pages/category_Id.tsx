@@ -7,7 +7,6 @@ import {
   CardContent,
   Chip,
   IconButton,
-  Rating,
   Button,
   Skeleton,
 } from "@mui/material";
@@ -20,8 +19,9 @@ import get_categoriesById from "../services/get_categorieID";
 import get_productsByCat from "../services/get_productsCat";
 import { products_images, category_images } from "../data/images";
 import type { CategoryApi, ProductApi } from "../interfaces/interfaces";
-import { useNavigate } from "react-router-dom";
 import "../styles/cat_detail.css";
+import { useDispatch, useSelector } from "react-redux";
+import { add_product } from "../cart/app_slice";
 
 const CategoryDetail_ID: React.FC = () => {
   const { id_cat } = useParams();
@@ -29,7 +29,7 @@ const CategoryDetail_ID: React.FC = () => {
   const [products, setProducts] = useState<ProductApi[]>([]);
   const [loadingCat, setLoadingCat] = useState<boolean>(true);
   const [loadingProd, setLoadingProd] = useState<boolean>(true);
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -84,6 +84,13 @@ const CategoryDetail_ID: React.FC = () => {
   const getProdImg = (id: number) => {
     const img = products_images.find((prod) => prod.id == id);
     return img?.image;
+  };
+
+  const handleAddItem = (id: number) => {
+    const productToAdd = products.find((product) => product.id === id);
+    if (productToAdd) {
+      dispatch(add_product(productToAdd));
+    }
   };
 
   const renderCategorySkeleton = () => (
@@ -263,6 +270,7 @@ const CategoryDetail_ID: React.FC = () => {
                   </Box>
 
                   <Button
+                    onClick={() => handleAddItem(product.id)}
                     size="small"
                     variant="contained"
                     className="add-button"

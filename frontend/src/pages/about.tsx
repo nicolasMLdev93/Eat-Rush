@@ -3,8 +3,6 @@ import {
   Box,
   Container,
   Typography,
-  Chip,
-  Stack,
   Divider,
 } from "@mui/material";
 import { technology_icons } from "../data/images";
