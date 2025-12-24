@@ -13,8 +13,8 @@
   width: 100%;
   max-width: 1000px;
   display: grid;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   grid-template-columns: 1fr;
   gap: 30px;
 }
@@ -218,7 +218,7 @@
 .cart-item {
   display: flex;
   gap: 20px;
-  padding: 20px 0;
+  padding: 20px;
   border-bottom: 1px solid #f0f0f0;
   position: relative;
 }
@@ -682,11 +682,6 @@
 
 .cart-item {
   animation: slideIn 0.3s ease-out;
-}
-
-.cart-item:hover {
-  background-color: #fefefe;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .cart-header .cart-icon {

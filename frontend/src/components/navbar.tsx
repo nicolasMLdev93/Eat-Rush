@@ -29,6 +29,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpIcon from "@mui/icons-material/Help";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
+import { useDispatch, useSelector } from "react-redux";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -126,9 +127,21 @@ export default function Navbar() {
   const [cartItems] = useState(3);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
-
+  const { cart, total, logged, total_products } = useSelector(
+    (state) => state.cart
+  );
   const handleLogoClick = () => {
     navigate("/");
+  };
+
+  const handleCartClick = () => {
+    navigate("/cart");
+    setDrawerOpen(false);
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login");
+    setDrawerOpen(false);
   };
 
   const handleSearch = (event) => {
@@ -222,6 +235,7 @@ export default function Navbar() {
               backgroundColor: "rgba(0, 0, 0, 0.04)",
             },
           }}
+          onClick={handleLoginClick}
         >
           <ListItemIcon>
             <AccountCircle sx={{ color: "#333333" }} />
@@ -243,12 +257,14 @@ export default function Navbar() {
             border: "1px solid #e0e0e0",
             "&:hover": {
               backgroundColor: "rgba(0, 0, 0, 0.02)",
+              cursor: "pointer",
             },
           }}
+          onClick={handleCartClick}
         >
           <ListItemIcon>
             <Badge
-              badgeContent={cartItems}
+              badgeContent={total_products}
               color="error"
               sx={{
                 "& .MuiBadge-badge": {
@@ -279,7 +295,7 @@ export default function Navbar() {
                 fontSize: "0.75rem",
               }}
             >
-              {cartItems} {cartItems === 1 ? "ítem" : "ítems"}
+              {total_products} {total_products === 1 ? "ítem" : "ítems"}
             </Typography>
           </Box>
           <Button
@@ -295,6 +311,7 @@ export default function Navbar() {
                 backgroundColor: "#C00E5A",
               },
             }}
+            onClick={handleCartClick}
           >
             Ver carrito
           </Button>
@@ -327,6 +344,10 @@ export default function Navbar() {
                 "&:hover": {
                   backgroundColor: "rgba(0, 0, 0, 0.04)",
                 },
+              }}
+              onClick={() => {
+                navigate(item.path);
+                setDrawerOpen(false);
               }}
             >
               <ListItemIcon>
@@ -456,6 +477,70 @@ export default function Navbar() {
           </Search>
 
           <Box sx={{ flexGrow: { xs: 0, md: 1 } }} />
+
+          <IconButton
+            size="large"
+            aria-label="carrito de compras"
+            onClick={handleCartClick}
+            sx={{
+              display: { xs: "none", md: "flex" },
+              color: "#333333",
+              mr: 1,
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+              },
+              "&:focus": { outline: "none" },
+              "&:focus-visible": { outline: "none" },
+              "&.Mui-focusVisible": { boxShadow: "none" },
+            }}
+          >
+            <Badge
+              badgeContent={total_products}
+              color="error"
+              sx={{
+                "& .MuiBadge-badge": {
+                  backgroundColor: "#D70F64",
+                  color: "white",
+                  fontSize: "0.6rem",
+                  fontWeight: "bold",
+                },
+              }}
+            >
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
+
+          <IconButton
+            size="large"
+            aria-label="carrito de compras móvil"
+            onClick={handleCartClick}
+            sx={{
+              display: { xs: "flex", md: "none" },
+              color: "#333333",
+              mr: 1,
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+              },
+              "&:focus": { outline: "none" },
+              "&:focus-visible": { outline: "none" },
+              "&.Mui-focusVisible": { boxShadow: "none" },
+            }}
+          >
+            <Badge
+              badgeContent={cartItems}
+              color="error"
+              sx={{
+                "& .MuiBadge-badge": {
+                  backgroundColor: "#D70F64",
+                  color: "white",
+                  fontSize: "0.6rem",
+                  fontWeight: "bold",
+                },
+              }}
+            >
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
 
           <IconButton
             size="large"

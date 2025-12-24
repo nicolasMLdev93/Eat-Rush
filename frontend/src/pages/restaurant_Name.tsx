@@ -26,7 +26,7 @@ import { restaurants_images, products_images } from "../data/images";
 import type { RestaurantApi, ProductApi } from "../interfaces/interfaces";
 import "../styles/rest_detail.css";
 import { useDispatch } from "react-redux";
-import { add_product } from "../cart/app_slice";
+import { add_product } from "../cart/slice";
 
 const RestaurantDetail_Name: React.FC = () => {
   const { name_rest } = useParams();

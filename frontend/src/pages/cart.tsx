@@ -12,7 +12,7 @@ import {
   clear_cart,
   login_user,
   logout_user,
-} from "../cart/app_slice";
+} from "../cart/slice";
 import {
   Snackbar,
   Alert,
@@ -105,9 +105,6 @@ const Cart: React.FC = () => {
     );
   };
 
-  console.log(total)
-  console.log(cart)
-  console.log(total_products)
 
   const handleContinueShopping = () => {
     navigate("/");
@@ -304,7 +301,6 @@ const Cart: React.FC = () => {
                 <div className="item-header">
                   <div className="item-info">
                     <h3 className="item-name">{item.name}</h3>
-                    <p className="item-id">ID: {item.id}</p>
                   </div>
                   <div className="item-price-section">
                     <span className="item-unit-price">
