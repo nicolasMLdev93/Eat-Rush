@@ -5,6 +5,7 @@ import { products_images } from "../data/images";
 import { useDispatch, useSelector } from "react-redux";
 import type { Product_cart } from "../interfaces/interfaces";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import {
   delete_product,
   increase_quantity,
@@ -28,7 +29,9 @@ const Cart: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { cart, total, logged,total_products } = useSelector((state) => state.cart);
+  const { cart, total, logged, total_products } = useSelector(
+    (state) => state.cart
+  );
 
   const [notification, setNotification] = useState<{
     open: boolean;
@@ -105,7 +108,6 @@ const Cart: React.FC = () => {
     );
   };
 
-
   const handleContinueShopping = () => {
     navigate("/");
   };
@@ -133,8 +135,7 @@ const Cart: React.FC = () => {
   };
 
   const handleLogin = () => {
-    dispatch(login_user());
-    showNotification("Sesión iniciada (simulación)", "success");
+    navigate("/login");
   };
 
   const handleLogout = () => {
@@ -156,10 +157,12 @@ const Cart: React.FC = () => {
     setConfirmDialog({ ...confirmDialog, open: false });
   };
 
-  const subtotal = total;
-  const tax = subtotal * 0.08;
-  const total_price = subtotal + tax;
-  const shipping = subtotal > 50 ? 0 : 5.99;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
+
 
   if (cart.length === 0) {
     return (
@@ -257,7 +260,7 @@ const Cart: React.FC = () => {
               Tu Carrito
             </h1>
             <p className="cart-subtitle">
-              {cart.length} {cart.length === 1 ? "producto" : "productos"} en el
+              {total_products} {total_products === 1 ? "producto" : "productos"} en el
               carrito
             </p>
           </div>
@@ -268,7 +271,7 @@ const Cart: React.FC = () => {
                 <>
                   <span className="user-status">👤 Conectado</span>
                   <button className="logout-btn small" onClick={handleLogout}>
-                    Salir
+                    Cerrar sesión
                   </button>
                 </>
               ) : (
@@ -372,39 +375,21 @@ const Cart: React.FC = () => {
                 Subtotal ({cart.reduce((acc, item) => acc + item.quantity, 0)}{" "}
                 items)
               </span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>${total.toFixed(2)}</span>
             </div>
 
             <div className="summary-row">
               <span>Costo de envío</span>
               <span>
-                {shipping === 0 ? (
-                  <span className="free-shipping">🎉 Gratis</span>
-                ) : (
-                  `$${shipping.toFixed(2)}`
-                )}
+                $ 0
               </span>
             </div>
-
-            <div className="summary-row">
-              <span>Impuestos (8%)</span>
-              <span>${tax.toFixed(2)}</span>
-            </div>
-
-            {subtotal < 50 && shipping > 0 && (
-              <div className="shipping-notice">
-                <span className="notice-icon">🚚</span>
-                <span>
-                  ¡Agrega ${(50 - subtotal).toFixed(2)} más para envío gratis!
-                </span>
-              </div>
-            )}
 
             <div className="summary-divider"></div>
 
             <div className="summary-row total">
-              <span>Total</span>
-              <span className="total-amount">${total_price.toFixed(2)}</span>
+              <span>Sub total</span>
+              <span className="total-amount">${total.toFixed(2)}</span>
             </div>
           </div>
 
@@ -469,8 +454,9 @@ const Cart: React.FC = () => {
           <DialogContentText>{confirmDialog.message}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseConfirmDialog}>Cancelar</Button>
+          <Button sx={{color:'red'}} onClick={handleCloseConfirmDialog}>Cancelar</Button>
           <Button
+          sx={{color:'red'}}
             onClick={() => {
               confirmDialog.onConfirm();
               handleCloseConfirmDialog();

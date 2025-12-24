@@ -73,7 +73,7 @@ const AppButton = styled(Box)(({ theme }) => ({
   },
 }));
 
-const Footer = () => {
+const Footer: React.FC = () => {
   return (
     <FooterContainer component="footer">
       <Container maxWidth="lg">

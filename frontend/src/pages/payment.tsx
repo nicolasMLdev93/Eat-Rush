@@ -1,9 +1,29 @@
 import React, { useState } from "react";
 import "../styles/payment.css";
 import Footer from "../components/footer";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Payment = () => {
+const Payment: React.FC = () => {
+  const { cart, total, logged, total_products } = useSelector(
+    (state) => state.cart
+  );
+  const navigate = useNavigate();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
+
+  useEffect(() => {
+    if (!logged || total_products === 0) {
+      navigate("/");
+    }
+  }, [logged, total_products, navigate]);
+
   const [paymentMethod, setPaymentMethod] = useState("card");
+  const [tip, settip] = useState<number>(0);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -28,11 +48,11 @@ const Payment = () => {
       { name: "Papas Fritas", price: 5.99 },
       { name: "Coca-Cola x3", price: 11.97 },
     ],
-    subtotal: 43.94,
-    deliveryFee: 2.99,
-    tax: 3.51,
-    tip: 4.39,
-    total: 54.83,
+    subtotal: total,
+    deliveryFee: 0,
+    tax: total * 0.02,
+    tip: formData.tip,
+    total: total + total * 0.2 + formData.tip,
   };
 
   const handleChange = (e) => {
@@ -78,7 +98,6 @@ const Payment = () => {
   return (
     <div className="payment-container">
       <div className="payment-content">
-        {/* Header */}
         <div className="payment-header">
           <h1 className="payment-title">
             <span className="payment-icon">💳</span>
@@ -89,14 +108,12 @@ const Payment = () => {
           </p>
         </div>
 
-        {/* Formulario principal */}
         <div className="payment-form-container">
           <form onSubmit={handleSubmit} className="payment-form">
-            {/* Información de envío */}
             <section className="form-section">
               <h2 className="section-title">
                 <span className="section-icon">📍</span>
-                Información de Envío
+                Información de envío
               </h2>
 
               <div className="form-grid">
@@ -339,15 +356,19 @@ const Payment = () => {
             <h2 className="summary-title">Resumen del Pedido</h2>
 
             <div className="restaurant-info">
-              <h3>🍔 Burger Express</h3>
+              <h3>🍔 Solo te falta confirmar!</h3>
               <p>Entrega estimada: 25-35 min</p>
             </div>
 
             <div className="items-list">
-              {orderSummary.items.map((item, index) => (
+              {cart.map((item, index) => (
                 <div key={index} className="item-row">
-                  <span className="item-name">{item.name}</span>
-                  <span className="item-price">${item.price.toFixed(2)}</span>
+                  <span className="item-name">
+                    {item.name} x {item.quantity}
+                  </span>
+                  <span className="item-price">
+                    ${(item.price * item.quantity).toFixed(2)}{" "}
+                  </span>
                 </div>
               ))}
             </div>

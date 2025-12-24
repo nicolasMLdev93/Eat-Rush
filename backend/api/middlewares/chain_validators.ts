@@ -112,12 +112,6 @@ export const validateLoginUser: ValidationChain[] = [
     .withMessage("Password must be a string!")
     .notEmpty()
     .withMessage("Password is required!")
-    .isLength({ min: 8, max: 100 })
-    .withMessage("Password must be between 8 and 100 characters!")
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
-    .withMessage(
-      "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character!"
-    ),
 ];
 
 export const validateCreateRestaurant: ValidationChain[] = [
