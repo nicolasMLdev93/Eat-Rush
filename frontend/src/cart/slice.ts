@@ -8,7 +8,6 @@ const initialTotal_productsState = localStorage.getItem("total_producs");
 
 const safeParse = <T>(value: string | null, defaultValue: T): T => {
   if (!value) return defaultValue;
-
   try {
     return JSON.parse(value);
   } catch (error) {
@@ -18,11 +17,10 @@ const safeParse = <T>(value: string | null, defaultValue: T): T => {
 };
 
 const isLoggedIn = initialLoggedState ? true : false;
-
 const cart_state: Cart_state = {
   cart: safeParse(initialCartState, []),
   total: safeParse(initialTotalState, 0),
-  logged: isLoggedIn, // Solo verifica si existe
+  logged: isLoggedIn,
   total_products: safeParse(initialTotal_productsState, 0),
 };
 
