@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const { Product, Restaurant, Category, User } = require("../../models");
+const { Product, Restaurant, Category, User, OrderItem, Order, } = require("../../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 // Get all products from Database //
@@ -344,6 +344,36 @@ exports.getCat_byName = async (req, res) => {
             success: true,
             category: category,
         });
+    }
+    catch (error) {
+        res.status(500).json({ error: "Internal Server Error", success: false });
+    }
+};
+exports.createOrder_items = async (req, res) => {
+    const { totalAmount, deliveryAddress, deliveryNotes, paymentMethod, userId, restaurantId, items, } = req.body;
+    try {
+        const new_order = await Order.create({
+            totalAmount: totalAmount,
+            status: "Pending",
+            deliveryAddress: deliveryAddress,
+            deliveryNotes: deliveryNotes,
+            paymentMethod: paymentMethod,
+            userId: userId,
+            restaurantId: restaurantId,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        });
+        const orderItems = items.map((item) => ({
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            subtotal: item.subtotal,
+            orderId: new_order.id,
+            productId: item.productId,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        }));
+        await Order.bulkCreate(orderItems);
+        res.status(200).json({ Success: "New order created!", success: true });
     }
     catch (error) {
         res.status(500).json({ error: "Internal Server Error", success: false });

@@ -16,6 +16,7 @@ const {
   validateGetRestaurant_Name,
   validateGetCategory_Id,
   validateGetCategory_Name,
+  validateCreateOrder,
 } = require("../middlewares/chain_validators");
 // Results validators //
 const { validate_Results } = require("../middlewares/results_validator");
@@ -36,10 +37,14 @@ const {
   validateExistantRes_byName,
   validateExistanCat_byId,
   validateExistantCat_byName,
+  validateExistanCreateOrder,
 } = require("../middlewares/existence_validators");
 
 // Validate admin with token
-const { validateAdminToken } = require("../middlewares/validate_admin");
+const {
+  validateAdminToken,
+  validateUserToken,
+} = require("../middlewares/validate_admin");
 
 // Controllers//
 const {
@@ -61,6 +66,7 @@ const {
   getRest_byName,
   getCategory_byId,
   getCat_byName,
+  createOrder_items,
 } = require("../controllers/controllers");
 
 // Basic getters //
@@ -201,6 +207,16 @@ router.get(
   validate_Results,
   validateExistantCat_byName,
   getCat_byName
+);
+
+// Insert orders and products in each order
+router.post(
+  "/new_order",
+  validateCreateOrder,
+  validate_Results,
+  validateUserToken,
+  validateExistanCreateOrder,
+  createOrder_items
 );
 
 module.exports = router;

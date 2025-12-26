@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateExistantCat_byName = exports.validateExistanCat_byId = exports.validateExistantRes_byName = exports.validateExistanRest_byId = exports.validateExistanProd_byRest = exports.validateExistanProd_byCat = exports.validateExistanProd_byId = exports.validateExistantDeleteRest = exports.validateExistantDeleteCat = exports.validateExistantDeleteProd = exports.validateExistantCreateCategory = exports.validateExistantCreateRestaurant = exports.validateExistantCreateProduct = exports.validateExistantUser_register = exports.validateExistantUser_login = void 0;
+exports.validateExistanCreateOrder = exports.validateExistantCat_byName = exports.validateExistanCat_byId = exports.validateExistantRes_byName = exports.validateExistanRest_byId = exports.validateExistanProd_byRest = exports.validateExistanProd_byCat = exports.validateExistanProd_byId = exports.validateExistantDeleteRest = exports.validateExistantDeleteCat = exports.validateExistantDeleteProd = exports.validateExistantCreateCategory = exports.validateExistantCreateRestaurant = exports.validateExistantCreateProduct = exports.validateExistantUser_register = exports.validateExistantUser_login = void 0;
 const { Product, Restaurant, Category, User } = require("../../models");
-const jwt = require("jsonwebtoken");
 const validateExistantUser_login = async (req, res, next) => {
     const { email } = req.body;
     try {
@@ -372,3 +371,25 @@ const validateExistantCat_byName = async (req, res, next) => {
     }
 };
 exports.validateExistantCat_byName = validateExistantCat_byName;
+const validateExistanCreateOrder = async (req, res, next) => {
+    const { productId } = req.body;
+    try {
+        const existantProd = await Product.findOnde({ where: { id: productId } });
+        if (!existantProd) {
+            res.status(404).json({
+                error: "A product with that id not exists!",
+                success: false,
+            });
+        }
+        else {
+            next();
+        }
+    }
+    catch (error) {
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.validateExistanCreateOrder = validateExistanCreateOrder;

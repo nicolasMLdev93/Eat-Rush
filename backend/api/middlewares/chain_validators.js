@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateGetCategory_Name = exports.validateGetCategory_Id = exports.validateGetRestaurant_Name = exports.validateGetRestaurant_Id = exports.validateGetProduct_Rest = exports.validateGetProduct_Cat = exports.validateGetProduct_Id = exports.validateSoftDelete = exports.validateCreateCategory = exports.validateCreateRestaurant = exports.validateLoginUser = exports.validateRegisterUser = exports.validateCreateProduct = void 0;
+exports.validateCreateOrder = exports.validateGetCategory_Name = exports.validateGetCategory_Id = exports.validateGetRestaurant_Name = exports.validateGetRestaurant_Id = exports.validateGetProduct_Rest = exports.validateGetProduct_Cat = exports.validateGetProduct_Id = exports.validateSoftDelete = exports.validateCreateCategory = exports.validateCreateRestaurant = exports.validateLoginUser = exports.validateRegisterUser = exports.validateCreateProduct = void 0;
 const express_validator_1 = require("express-validator");
 exports.validateCreateProduct = [
     (0, express_validator_1.body)("name")
@@ -107,7 +107,7 @@ exports.validateLoginUser = [
         .isString()
         .withMessage("Password must be a string!")
         .notEmpty()
-        .withMessage("Password is required!")
+        .withMessage("Password is required!"),
 ];
 exports.validateCreateRestaurant = [
     (0, express_validator_1.body)("name")
@@ -217,4 +217,51 @@ exports.validateGetCategory_Name = [
         .withMessage("The field 'nameSlug' can´t be empty!")
         .isString()
         .withMessage("The field 'nameSlug' must be a string!"),
+];
+exports.validateCreateOrder = [
+    (0, express_validator_1.body)("totalAmount")
+        .notEmpty()
+        .withMessage("Total amount is required")
+        .isFloat({ min: 0 })
+        .withMessage("Total amount must be a positive number")
+        .toFloat(),
+    (0, express_validator_1.body)("deliveryAddress")
+        .notEmpty()
+        .withMessage("Delivery address is required")
+        .isString()
+        .withMessage("Delivery address must be text")
+        .trim()
+        .isLength({ min: 5, max: 200 })
+        .withMessage("Delivery address must be between 5 and 200 characters"),
+    (0, express_validator_1.body)("deliveryNotes")
+        .optional()
+        .isString()
+        .withMessage("Delivery notes must be text")
+        .trim()
+        .isLength({ max: 500 })
+        .withMessage("Delivery notes must not exceed 500 characters"),
+    (0, express_validator_1.body)("paymentMethod")
+        .notEmpty()
+        .withMessage("Payment method is required")
+        .isString()
+        .withMessage("Payment method must be text")
+        .isIn(["Cash", "Credit Card", "Debit Card", "Mobile Payment"])
+        .withMessage("Invalid payment method"),
+    (0, express_validator_1.body)("userId")
+        .notEmpty()
+        .withMessage("User ID is required")
+        .isInt({ min: 1 })
+        .withMessage("User ID must be a positive integer")
+        .toInt(),
+    (0, express_validator_1.body)("restaurantId")
+        .notEmpty()
+        .withMessage("Restaurant ID is required")
+        .isInt({ min: 1 })
+        .withMessage("Restaurant ID must be a positive integer")
+        .toInt(),
+    (0, express_validator_1.body)("items")
+        .notEmpty()
+        .withMessage("Items are required")
+        .isArray({ min: 1 })
+        .withMessage("There must be at least one item in the order"),
 ];

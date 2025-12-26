@@ -111,7 +111,7 @@ export const validateLoginUser: ValidationChain[] = [
     .isString()
     .withMessage("Password must be a string!")
     .notEmpty()
-    .withMessage("Password is required!")
+    .withMessage("Password is required!"),
 ];
 
 export const validateCreateRestaurant: ValidationChain[] = [
@@ -237,4 +237,58 @@ export const validateGetCategory_Name: ValidationChain[] = [
     .withMessage("The field 'nameSlug' can´t be empty!")
     .isString()
     .withMessage("The field 'nameSlug' must be a string!"),
+];
+
+export const validateCreateOrder: ValidationChain[] = [
+  body("totalAmount")
+    .notEmpty()
+    .withMessage("Total amount is required")
+    .isFloat({ min: 0 })
+    .withMessage("Total amount must be a positive number")
+    .toFloat(),
+
+  body("deliveryAddress")
+    .notEmpty()
+    .withMessage("Delivery address is required")
+    .isString()
+    .withMessage("Delivery address must be text")
+    .trim()
+    .isLength({ min: 5, max: 200 })
+    .withMessage("Delivery address must be between 5 and 200 characters"),
+
+  body("deliveryNotes")
+    .optional()
+    .isString()
+    .withMessage("Delivery notes must be text")
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("Delivery notes must not exceed 500 characters"),
+
+  body("paymentMethod")
+    .notEmpty()
+    .withMessage("Payment method is required")
+    .isString()
+    .withMessage("Payment method must be text")
+    .isIn(["Cash", "Credit Card", "Debit Card", "Mobile Payment"])
+    .withMessage("Invalid payment method"),
+
+  body("userId")
+    .notEmpty()
+    .withMessage("User ID is required")
+    .isInt({ min: 1 })
+    .withMessage("User ID must be a positive integer")
+    .toInt(),
+
+  body("restaurantId")
+    .notEmpty()
+    .withMessage("Restaurant ID is required")
+    .isInt({ min: 1 })
+    .withMessage("Restaurant ID must be a positive integer")
+    .toInt(),
+
+  body("items")
+    .notEmpty()
+    .withMessage("Items are required")
+    .isArray({ min: 1 })
+    .withMessage("There must be at least one item in the order"),
 ];

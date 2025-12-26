@@ -3,15 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const router = express.Router();
 // Chain validators //
-const { validateCreateProduct, validateRegisterUser, validateLoginUser, validateCreateRestaurant, validateCreateCategory, validateSoftDelete, validateGetProduct_Id, validateGetProduct_Cat, validateGetProduct_Rest, validateGetRestaurant_Id, validateGetRestaurant_Name, validateGetCategory_Id, validateGetCategory_Name, } = require("../middlewares/chain_validators");
+const { validateCreateProduct, validateRegisterUser, validateLoginUser, validateCreateRestaurant, validateCreateCategory, validateSoftDelete, validateGetProduct_Id, validateGetProduct_Cat, validateGetProduct_Rest, validateGetRestaurant_Id, validateGetRestaurant_Name, validateGetCategory_Id, validateGetCategory_Name, validateCreateOrder, } = require("../middlewares/chain_validators");
 // Results validators //
 const { validate_Results } = require("../middlewares/results_validator");
 // Existence validators //
-const { validateExistantUser_register, validateExistantUser_login, validateExistantCreateCategory, validateExistantCreateRestaurant, validateExistantCreateProduct, validateExistantDeleteRest, validateExistantDeleteCat, validateExistantDeleteProd, validateExistanProd_byId, validateExistanProd_byCat, validateExistanProd_byRest, validateExistanRest_byId, validateExistantRes_byName, validateExistanCat_byId, validateExistantCat_byName, } = require("../middlewares/existence_validators");
+const { validateExistantUser_register, validateExistantUser_login, validateExistantCreateCategory, validateExistantCreateRestaurant, validateExistantCreateProduct, validateExistantDeleteRest, validateExistantDeleteCat, validateExistantDeleteProd, validateExistanProd_byId, validateExistanProd_byCat, validateExistanProd_byRest, validateExistanRest_byId, validateExistantRes_byName, validateExistanCat_byId, validateExistantCat_byName, validateExistanCreateOrder, } = require("../middlewares/existence_validators");
 // Validate admin with token
-const { validateAdminToken } = require("../middlewares/validate_admin");
+const { validateAdminToken, validateUserToken, } = require("../middlewares/validate_admin");
 // Controllers//
-const { getProducts, getRestaurants, getCategories, registerUser, loginUser, createProduct, createRestaurant, createCategory, deleteRestaurant, deleteProduct, deleteCategory, getProd_byId, getProd_byCat, getProd_byRest, getRest_byId, getRest_byName, getCategory_byId, getCat_byName, } = require("../controllers/controllers");
+const { getProducts, getRestaurants, getCategories, registerUser, loginUser, createProduct, createRestaurant, createCategory, deleteRestaurant, deleteProduct, deleteCategory, getProd_byId, getProd_byCat, getProd_byRest, getRest_byId, getRest_byName, getCategory_byId, getCat_byName, createOrder_items, } = require("../controllers/controllers");
 // Basic getters //
 // Get products //
 router.get("/products", getProducts);
@@ -40,4 +40,6 @@ router.get("/restaurant/:id", validateGetRestaurant_Id, validate_Results, valida
 router.get("/restaurant/name/:nameSlug", validateGetRestaurant_Name, validate_Results, validateExistantRes_byName, getRest_byName);
 router.get("/category/:id", validateGetCategory_Id, validate_Results, validateExistanCat_byId, getCategory_byId);
 router.get("/category/name/:nameSlug", validateGetCategory_Name, validate_Results, validateExistantCat_byName, getCat_byName);
+// Insert orders and products in each order
+router.post("/new_order", validateCreateOrder, validate_Results, validateUserToken, validateExistanCreateOrder, createOrder_items);
 module.exports = router;

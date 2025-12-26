@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { body, param, query, ValidationChain } from "express-validator";
 const { Product, Restaurant, Category, User } = require("../../models");
-const jwt = require("jsonwebtoken");
 
 export const validateExistantUser_login = async (
   req: Request,
@@ -394,6 +393,30 @@ export const validateExistantCat_byName = async (
         success: false,
       });
       return;
+    } else {
+      next();
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+export const validateExistanCreateOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { productId } = req.body;
+  try {
+    const existantProd = await Product.findOnde({ where: { id: productId } });
+    if (!existantProd) {
+      res.status(404).json({
+        error: "A product with that id not exists!",
+        success: false,
+      });
     } else {
       next();
     }
