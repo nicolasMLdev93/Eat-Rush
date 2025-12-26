@@ -527,7 +527,7 @@ export default function Navbar() {
             }}
           >
             <Badge
-              badgeContent={cartItems}
+              badgeContent={total_products}
               color="error"
               sx={{
                 "& .MuiBadge-badge": {

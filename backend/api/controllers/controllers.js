@@ -350,7 +350,7 @@ exports.getCat_byName = async (req, res) => {
     }
 };
 exports.createOrder_items = async (req, res) => {
-    const { totalAmount, deliveryAddress, deliveryNotes, paymentMethod, userId, restaurantId, items, } = req.body;
+    const { totalAmount, deliveryAddress, deliveryNotes, paymentMethod, paymentStatus, userId, restaurantId, items, } = req.body;
     try {
         const new_order = await Order.create({
             totalAmount: totalAmount,
@@ -358,6 +358,7 @@ exports.createOrder_items = async (req, res) => {
             deliveryAddress: deliveryAddress,
             deliveryNotes: deliveryNotes,
             paymentMethod: paymentMethod,
+            paymentStatus: paymentStatus,
             userId: userId,
             restaurantId: restaurantId,
             createdAt: new Date(),
@@ -372,7 +373,7 @@ exports.createOrder_items = async (req, res) => {
             createdAt: new Date(),
             updatedAt: new Date(),
         }));
-        await Order.bulkCreate(orderItems);
+        await OrderItem.bulkCreate(orderItems);
         res.status(200).json({ Success: "New order created!", success: true });
     }
     catch (error) {

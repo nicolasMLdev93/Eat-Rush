@@ -43,6 +43,7 @@ const Login: React.FC = () => {
       const data = await response.json();
       if (response.ok) {
         setModalMessage("¡Inicio de sesión exitoso!");
+        localStorage.setItem("authToken", data.token);
         dispatch(login_user());
         setShowModal(true);
         setformData_login({ email: "", password: "" });

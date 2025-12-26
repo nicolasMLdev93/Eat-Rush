@@ -386,6 +386,7 @@ exports.createOrder_items = async (req: Request, res: Response) => {
     deliveryAddress,
     deliveryNotes,
     paymentMethod,
+    paymentStatus,
     userId,
     restaurantId,
     items,
@@ -397,6 +398,7 @@ exports.createOrder_items = async (req: Request, res: Response) => {
       deliveryAddress: deliveryAddress,
       deliveryNotes: deliveryNotes,
       paymentMethod: paymentMethod,
+      paymentStatus: paymentStatus,
       userId: userId,
       restaurantId: restaurantId,
       createdAt: new Date(),
@@ -411,7 +413,7 @@ exports.createOrder_items = async (req: Request, res: Response) => {
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
-    await Order.bulkCreate(orderItems);
+    await OrderItem.bulkCreate(orderItems);
     res.status(200).json({ Success: "New order created!", success: true });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error", success: false });

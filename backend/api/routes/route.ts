@@ -16,7 +16,7 @@ const {
   validateGetRestaurant_Name,
   validateGetCategory_Id,
   validateGetCategory_Name,
-  validateCreateOrder,
+  validateCreateOrder
 } = require("../middlewares/chain_validators");
 // Results validators //
 const { validate_Results } = require("../middlewares/results_validator");
@@ -37,7 +37,6 @@ const {
   validateExistantRes_byName,
   validateExistanCat_byId,
   validateExistantCat_byName,
-  validateExistanCreateOrder,
 } = require("../middlewares/existence_validators");
 
 // Validate admin with token
@@ -214,8 +213,7 @@ router.post(
   "/new_order",
   validateCreateOrder,
   validate_Results,
-  validateUserToken,
-  validateExistanCreateOrder,
+  //validateUserToken,
   createOrder_items
 );
 

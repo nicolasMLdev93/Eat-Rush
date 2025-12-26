@@ -404,26 +404,3 @@ export const validateExistantCat_byName = async (
   }
 };
 
-export const validateExistanCreateOrder = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const { productId } = req.body;
-  try {
-    const existantProd = await Product.findOnde({ where: { id: productId } });
-    if (!existantProd) {
-      res.status(404).json({
-        error: "A product with that id not exists!",
-        success: false,
-      });
-    } else {
-      next();
-    }
-  } catch (error) {
-    return res.status(500).json({
-      error: "Internal Server Error",
-      success: false,
-    });
-  }
-};

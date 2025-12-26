@@ -145,6 +145,7 @@ const Cart: React.FC = () => {
       () => {
         dispatch(logout_user());
         showNotification("Sesión cerrada", "info");
+        localStorage.removeItem('authToken')
       }
     );
   };

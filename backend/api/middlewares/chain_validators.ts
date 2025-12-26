@@ -268,22 +268,13 @@ export const validateCreateOrder: ValidationChain[] = [
     .notEmpty()
     .withMessage("Payment method is required")
     .isString()
-    .withMessage("Payment method must be text")
-    .isIn(["Cash", "Credit Card", "Debit Card", "Mobile Payment"])
-    .withMessage("Invalid payment method"),
+    .withMessage("Payment method must be text"),
 
   body("userId")
     .notEmpty()
     .withMessage("User ID is required")
     .isInt({ min: 1 })
     .withMessage("User ID must be a positive integer")
-    .toInt(),
-
-  body("restaurantId")
-    .notEmpty()
-    .withMessage("Restaurant ID is required")
-    .isInt({ min: 1 })
-    .withMessage("Restaurant ID must be a positive integer")
     .toInt(),
 
   body("items")
