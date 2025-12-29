@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateExistantCat_byName = exports.validateExistanCat_byId = exports.validateExistantRes_byName = exports.validateExistanRest_byId = exports.validateExistanProd_byRest = exports.validateExistanProd_byCat = exports.validateExistanProd_byId = exports.validateExistantDeleteRest = exports.validateExistantDeleteCat = exports.validateExistantDeleteProd = exports.validateExistantCreateCategory = exports.validateExistantCreateRestaurant = exports.validateExistantCreateProduct = exports.validateExistantUser_register = exports.validateExistantUser_login = void 0;
+exports.validateExistantRes_bySearchName = exports.validateExistantCat_byName = exports.validateExistanCat_byId = exports.validateExistantRes_byName = exports.validateExistanRest_byId = exports.validateExistanProd_byRest = exports.validateExistanProd_byCat = exports.validateExistanProd_byId = exports.validateExistantDeleteRest = exports.validateExistantDeleteCat = exports.validateExistantDeleteProd = exports.validateExistantCreateCategory = exports.validateExistantCreateRestaurant = exports.validateExistantCreateProduct = exports.validateExistantUser_register = exports.validateExistantUser_login = void 0;
 const { Product, Restaurant, Category, User } = require("../../models");
+const sequelize_1 = require("sequelize");
 const validateExistantUser_login = async (req, res, next) => {
     const { email } = req.body;
     try {
@@ -371,3 +372,31 @@ const validateExistantCat_byName = async (req, res, next) => {
     }
 };
 exports.validateExistantCat_byName = validateExistantCat_byName;
+const validateExistantRes_bySearchName = async (req, res, next) => {
+    const search_name = String(req.query.searchTerm);
+    try {
+        const restaurants = await Restaurant.findAll({
+            where: {
+                name: {
+                    [sequelize_1.Op.like]: `%${search_name}%`,
+                },
+            },
+        });
+        if (!restaurants || restaurants.length === 0) {
+            res.status(404).json({
+                error: "A restaurant with that name not exists!",
+                success: false,
+            });
+            return;
+        }
+        next();
+    }
+    catch (error) {
+        console.error("Error searching restaurants:", error);
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.validateExistantRes_bySearchName = validateExistantRes_bySearchName;

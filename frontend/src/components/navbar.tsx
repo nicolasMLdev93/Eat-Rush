@@ -29,7 +29,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HelpIcon from "@mui/icons-material/Help";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -43,6 +43,8 @@ const Search = styled("div")(({ theme }) => ({
   marginLeft: 0,
   marginRight: theme.spacing(2),
   width: "auto",
+  display: "flex",
+  alignItems: "center",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
@@ -53,27 +55,29 @@ const Search = styled("div")(({ theme }) => ({
 const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   color: "#666666",
+  cursor: "pointer",
+  "&:hover": {
+    color: "#D70F64",
+  },
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "#333333",
-  width: "100%",
+  flexGrow: 1,
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    paddingLeft: theme.spacing(1),
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: "400px",
+      width: "380px",
     },
     [theme.breakpoints.up("lg")]: {
-      width: "500px",
+      width: "480px",
     },
     "&::placeholder": {
       color: "#757575",
@@ -93,25 +97,29 @@ const MobileSearch = styled("div")(({ theme }) => ({
   },
   width: "100%",
   margin: theme.spacing(0, 1),
+  display: "flex",
+  alignItems: "center",
 }));
 
 const MobileSearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   color: "#666666",
+  cursor: "pointer",
+  "&:hover": {
+    color: "#D70F64",
+  },
 }));
 
 const MobileStyledInputBase = styled(InputBase)(({ theme }) => ({
   color: "#333333",
-  width: "100%",
+  flexGrow: 1,
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(2),
     fontSize: "0.9rem",
     "&::placeholder": {
@@ -124,12 +132,10 @@ const MobileStyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Navbar() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [cartItems] = useState(3);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
-  const { cart, total, logged, total_products } = useSelector(
-    (state) => state.cart
-  );
+  const { total_products } = useSelector((state: any) => state.cart);
+
   const handleLogoClick = () => {
     navigate("/");
   };
@@ -144,22 +150,28 @@ export default function Navbar() {
     setDrawerOpen(false);
   };
 
-  const handleSearch = (event) => {
-    if (event.key === "Enter" && searchTerm.trim()) {
-      console.log("Buscando:", searchTerm);
-      alert(`Buscando: ${searchTerm}`);
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${searchTerm}`);
     }
   };
 
-  const toggleDrawer = (open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      handleSearch();
     }
-    setDrawerOpen(open);
   };
+
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === "keydown" &&
+        (event.key === "Tab" || event.key === "Shift")
+      ) {
+        return;
+      }
+      setDrawerOpen(open);
+    };
 
   const drawerContent = () => (
     <Box
@@ -446,16 +458,16 @@ export default function Navbar() {
           <MobileSearch
             sx={{ display: { xs: "flex", md: "none" }, flexGrow: 1 }}
           >
-            <MobileSearchIconWrapper>
-              <SearchIcon />
-            </MobileSearchIconWrapper>
             <MobileStyledInputBase
-              placeholder="Buscar..."
+              placeholder="Buscar restaurantes .."
               inputProps={{ "aria-label": "search" }}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={handleSearch}
+              onKeyPress={handleKeyPress}
             />
+            <MobileSearchIconWrapper onClick={handleSearch}>
+              <SearchIcon />
+            </MobileSearchIconWrapper>
           </MobileSearch>
 
           <Search
@@ -464,16 +476,16 @@ export default function Navbar() {
               flexGrow: { md: 1, lg: 0 },
             }}
           >
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Buscar restaurantes, comidas..."
+              placeholder="Buscar restaurantes .."
               inputProps={{ "aria-label": "search" }}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={handleSearch}
+              onKeyPress={handleKeyPress}
             />
+            <SearchIconWrapper onClick={handleSearch}>
+              <SearchIcon />
+            </SearchIconWrapper>
           </Search>
 
           <Box sx={{ flexGrow: { xs: 0, md: 1 } }} />
@@ -489,9 +501,6 @@ export default function Navbar() {
               "&:hover": {
                 backgroundColor: "rgba(0, 0, 0, 0.04)",
               },
-              "&:focus": { outline: "none" },
-              "&:focus-visible": { outline: "none" },
-              "&.Mui-focusVisible": { boxShadow: "none" },
             }}
           >
             <Badge
@@ -521,9 +530,6 @@ export default function Navbar() {
               "&:hover": {
                 backgroundColor: "rgba(0, 0, 0, 0.04)",
               },
-              "&:focus": { outline: "none" },
-              "&:focus-visible": { outline: "none" },
-              "&.Mui-focusVisible": { boxShadow: "none" },
             }}
           >
             <Badge
@@ -552,9 +558,6 @@ export default function Navbar() {
               "&:hover": {
                 backgroundColor: "rgba(0, 0, 0, 0.04)",
               },
-              "&:focus": { outline: "none" },
-              "&:focus-visible": { outline: "none" },
-              "&.Mui-focusVisible": { boxShadow: "none" },
               ml: 1,
             }}
           >
@@ -571,9 +574,6 @@ export default function Navbar() {
               "&:hover": {
                 backgroundColor: "rgba(0, 0, 0, 0.04)",
               },
-              "&:focus": { outline: "none" },
-              "&:focus-visible": { outline: "none" },
-              "&.Mui-focusVisible": { boxShadow: "none" },
             }}
           >
             <MenuIcon />

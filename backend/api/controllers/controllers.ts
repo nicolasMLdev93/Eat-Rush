@@ -7,10 +7,9 @@ const {
   Order,
 } = require("../../models");
 import { Request, Response, NextFunction } from "express";
-import { body, param, query, ValidationChain } from "express-validator";
-import { permission } from "node:process";
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+import { Op } from "sequelize";
 
 // Get all products from Database //
 exports.getProducts = async (req: Request, res: Response): Promise<void> => {
@@ -417,5 +416,29 @@ exports.createOrder_items = async (req: Request, res: Response) => {
     res.status(200).json({ Success: "New order created!", success: true });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error", success: false });
+  }
+};
+
+export const getRest_bySearchName = async (req: Request, res: Response) => {
+  const search_name = String(req.query.searchTerm);
+  try {
+    const restaurants = await Restaurant.findAll({
+      where: {
+        name: {
+          [Op.like]: `%${search_name}%`,
+        },
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      restaurants: restaurants,
+    });
+  } catch (error) {
+    console.error("Error in getRest_bySearchName:", error);
+    return res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
   }
 };

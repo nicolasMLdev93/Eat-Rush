@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { body, param, query, ValidationChain } from "express-validator";
 const { Product, Restaurant, Category, User } = require("../../models");
+import { Op } from "sequelize";
 
 export const validateExistantUser_login = async (
   req: Request,
@@ -404,3 +405,34 @@ export const validateExistantCat_byName = async (
   }
 };
 
+export const validateExistantRes_bySearchName = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const search_name = String(req.query.searchTerm);
+
+  try {
+    const restaurants = await Restaurant.findAll({
+      where: {
+        name: {
+          [Op.like]: `%${search_name}%`,
+        },
+      },
+    });
+    if (!restaurants || restaurants.length === 0) {
+      res.status(404).json({
+        error: "A restaurant with that name not exists!",
+        success: false,
+      });
+      return;
+    }
+    next();
+  } catch (error) {
+    console.error("Error searching restaurants:", error);
+    return res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
+  }
+};

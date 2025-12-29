@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateCreateOrder = exports.validateGetCategory_Name = exports.validateGetCategory_Id = exports.validateGetRestaurant_Name = exports.validateGetRestaurant_Id = exports.validateGetProduct_Rest = exports.validateGetProduct_Cat = exports.validateGetProduct_Id = exports.validateSoftDelete = exports.validateCreateCategory = exports.validateCreateRestaurant = exports.validateLoginUser = exports.validateRegisterUser = exports.validateCreateProduct = void 0;
+exports.validateGetRestaurant_SearchName = exports.validateCreateOrder = exports.validateGetCategory_Name = exports.validateGetCategory_Id = exports.validateGetRestaurant_Name = exports.validateGetRestaurant_Id = exports.validateGetProduct_Rest = exports.validateGetProduct_Cat = exports.validateGetProduct_Id = exports.validateSoftDelete = exports.validateCreateCategory = exports.validateCreateRestaurant = exports.validateLoginUser = exports.validateRegisterUser = exports.validateCreateProduct = void 0;
 const express_validator_1 = require("express-validator");
 exports.validateCreateProduct = [
     (0, express_validator_1.body)("name")
@@ -256,4 +256,12 @@ exports.validateCreateOrder = [
         .withMessage("Items are required")
         .isArray({ min: 1 })
         .withMessage("There must be at least one item in the order"),
+];
+exports.validateGetRestaurant_SearchName = [
+    (0, express_validator_1.query)("search_name")
+        .optional()
+        .isString()
+        .withMessage("The field 'search_name' must be a string!")
+        .trim()
+        .escape(),
 ];

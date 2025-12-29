@@ -283,3 +283,12 @@ export const validateCreateOrder: ValidationChain[] = [
     .isArray({ min: 1 })
     .withMessage("There must be at least one item in the order"),
 ];
+
+export const validateGetRestaurant_SearchName: ValidationChain[] = [
+  query("search_name")
+    .optional() 
+    .isString()
+    .withMessage("The field 'search_name' must be a string!")
+    .trim()
+    .escape(),
+];

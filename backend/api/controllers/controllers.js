@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getRest_bySearchName = void 0;
 const { Product, Restaurant, Category, User, OrderItem, Order, } = require("../../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sequelize_1 = require("sequelize");
 // Get all products from Database //
 exports.getProducts = async (req, res) => {
     try {
@@ -380,3 +382,27 @@ exports.createOrder_items = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error", success: false });
     }
 };
+const getRest_bySearchName = async (req, res) => {
+    const search_name = String(req.query.searchTerm);
+    try {
+        const restaurants = await Restaurant.findAll({
+            where: {
+                name: {
+                    [sequelize_1.Op.like]: `%${search_name}%`,
+                },
+            },
+        });
+        res.status(200).json({
+            success: true,
+            restaurants: restaurants,
+        });
+    }
+    catch (error) {
+        console.error("Error in getRest_bySearchName:", error);
+        return res.status(500).json({
+            error: "Internal Server Error",
+            success: false,
+        });
+    }
+};
+exports.getRest_bySearchName = getRest_bySearchName;

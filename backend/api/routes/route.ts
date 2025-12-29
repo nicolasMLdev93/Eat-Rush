@@ -16,7 +16,8 @@ const {
   validateGetRestaurant_Name,
   validateGetCategory_Id,
   validateGetCategory_Name,
-  validateCreateOrder
+  validateCreateOrder,
+  validateGetRestaurant_SearchName,
 } = require("../middlewares/chain_validators");
 // Results validators //
 const { validate_Results } = require("../middlewares/results_validator");
@@ -37,13 +38,14 @@ const {
   validateExistantRes_byName,
   validateExistanCat_byId,
   validateExistantCat_byName,
+  validateExistantRes_bySearchName,
 } = require("../middlewares/existence_validators");
 
 // Validate admin with token
 const {
   validateAdminToken,
   validateUserToken,
-} = require("../middlewares/validate_admin");
+} = require("../middlewares/validate_token");
 
 // Controllers//
 const {
@@ -66,6 +68,7 @@ const {
   getCategory_byId,
   getCat_byName,
   createOrder_items,
+  getRest_bySearchName,
 } = require("../controllers/controllers");
 
 // Basic getters //
@@ -213,8 +216,17 @@ router.post(
   "/new_order",
   validateCreateOrder,
   validate_Results,
-  //validateUserToken,
+  validateUserToken,
   createOrder_items
+);
+
+// Get restaurants by query params
+router.get(
+  "/restaurant_search",
+  validateGetRestaurant_SearchName,
+  validate_Results,
+  validateExistantRes_bySearchName,
+  getRest_bySearchName
 );
 
 module.exports = router;
