@@ -42,10 +42,7 @@ const {
 } = require("../middlewares/existence_validators");
 
 // Validate admin with token
-const {
-  validateAdminToken,
-  validateUserToken,
-} = require("../middlewares/validate_token");
+const { validateToken } = require("../middlewares/validate_token");
 
 // Controllers//
 const {
@@ -69,6 +66,7 @@ const {
   getCat_byName,
   createOrder_items,
   getRest_bySearchName,
+  getOrder_byUser,
 } = require("../controllers/controllers");
 
 // Basic getters //
@@ -85,7 +83,7 @@ router.post(
   validateCreateProduct,
   validate_Results,
   validateExistantCreateProduct,
-  validateAdminToken,
+  validateToken,
   createProduct
 );
 
@@ -94,7 +92,7 @@ router.post(
   validateCreateRestaurant,
   validate_Results,
   validateExistantCreateRestaurant,
-  validateAdminToken,
+  validateToken,
   createRestaurant
 );
 
@@ -103,7 +101,7 @@ router.post(
   validateCreateCategory,
   validate_Results,
   validateExistantCreateCategory,
-  validateAdminToken,
+  validateToken,
   createCategory
 );
 
@@ -131,7 +129,7 @@ router.put(
   "/product",
   validateSoftDelete,
   validate_Results,
-  validateAdminToken,
+  validateToken,
   validateExistantDeleteProd,
   deleteProduct
 );
@@ -140,7 +138,7 @@ router.put(
   "/restaurant",
   validateSoftDelete,
   validate_Results,
-  validateAdminToken,
+  validateToken,
   validateExistantDeleteRest,
   deleteRestaurant
 );
@@ -149,7 +147,7 @@ router.put(
   "/category",
   validateSoftDelete,
   validate_Results,
-  validateAdminToken,
+  validateToken,
   validateExistantDeleteCat,
   deleteCategory
 );
@@ -216,11 +214,11 @@ router.post(
   "/new_order",
   validateCreateOrder,
   validate_Results,
-  validateUserToken,
+  validateToken,
   createOrder_items
 );
 
-// Get restaurants by query params
+// Get restaurants by query params (name)
 router.get(
   "/restaurant_search",
   validateGetRestaurant_SearchName,
@@ -228,6 +226,9 @@ router.get(
   validateExistantRes_bySearchName,
   getRest_bySearchName
 );
+
+// Get orders by user
+router.get("/orders/:id", validate_Results, getOrder_byUser);
 
 module.exports = router;
 export {};

@@ -12,6 +12,7 @@ import CategoryDetail_Name from "./pages/category_Name";
 import RestaurantDetail_ID from "./pages/restaurant_Id";
 import RestaurantDetail_Name from "./pages/restaurant_Name";
 import SearchTerms from "./pages/searchTerms";
+import Orders from "./pages/orders";
 
 const App: React.FC = () => {
   return (
@@ -20,13 +21,20 @@ const App: React.FC = () => {
         <Route index element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/restaurant/:id_rest" element={<RestaurantDetail_ID />} />
-        <Route path="/restaurant/name/:name_rest" element={<RestaurantDetail_Name />} />
+        <Route
+          path="/restaurant/name/:name_rest"
+          element={<RestaurantDetail_Name />}
+        />
         <Route path="/category/:id_cat" element={<CategoryDetail_ID />} />
-        <Route path="/category/name/:name_cat" element={<CategoryDetail_Name />} />
+        <Route
+          path="/category/name/:name_cat"
+          element={<CategoryDetail_Name />}
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Payment />} />
         <Route path="/search" element={<SearchTerms />} />
+        <Route path="/orders" element={<Orders />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

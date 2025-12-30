@@ -89,30 +89,48 @@ exports.loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
   try {
     const result = await User.findOne({ where: { email: email } });
+
+    if (!result) {
+      res.status(404).json({ error: "User not found", success: false });
+      return;
+    }
+
     const match = await bcrypt.compare(password, result.password);
+
     if (match) {
       const token = jwt.sign(
         {
-          token: result.id,
+          userId: result.id,
+          id: result.id,
           email: result.email,
           role: result.role,
         },
         process.env.JWT_SECRET || "secret",
-        { expiresIn: "1h" }
+        { expiresIn: "24h" }
       );
+
       res.status(200).json({
         message: `Welcome user ${email}`,
         token: token,
         success: true,
+        user: {
+          id: result.id,
+          email: result.email,
+          role: result.role,
+        },
       });
     } else {
-      res
-        .status(400)
-        .json({ error: "Invalid password! Try again!", success: false });
-      return;
+      res.status(400).json({
+        error: "Invalid password! Try again!",
+        success: false,
+      });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error", success: false });
+    console.error("Login error:", error);
+    res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
   }
 };
 
@@ -281,6 +299,7 @@ exports.getProd_byId = async (req: Request, res: Response) => {
   }
 };
 
+// Get products by cat. id
 exports.getProd_byCat = async (req: Request, res: Response) => {
   const { categoryId } = req.params;
   try {
@@ -298,6 +317,7 @@ exports.getProd_byCat = async (req: Request, res: Response) => {
   }
 };
 
+// Get products by rest. id
 exports.getProd_byRest = async (req: Request, res: Response) => {
   const { restaurantId } = req.params;
   try {
@@ -315,6 +335,7 @@ exports.getProd_byRest = async (req: Request, res: Response) => {
   }
 };
 
+// Get rest. by id
 exports.getRest_byId = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
@@ -332,6 +353,7 @@ exports.getRest_byId = async (req: Request, res: Response) => {
   }
 };
 
+// Get rest. by name
 exports.getRest_byName = async (req: Request, res: Response) => {
   const { nameSlug } = req.params;
   try {
@@ -347,6 +369,7 @@ exports.getRest_byName = async (req: Request, res: Response) => {
   }
 };
 
+// Get cat. by id
 exports.getCategory_byId = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
@@ -364,6 +387,7 @@ exports.getCategory_byId = async (req: Request, res: Response) => {
   }
 };
 
+// Get cat. by name
 exports.getCat_byName = async (req: Request, res: Response) => {
   const { nameSlug } = req.params;
   try {
@@ -379,25 +403,39 @@ exports.getCat_byName = async (req: Request, res: Response) => {
   }
 };
 
+// Create a new order
 exports.createOrder_items = async (req: Request, res: Response) => {
-  const {
-    totalAmount,
-    deliveryAddress,
-    deliveryNotes,
-    paymentMethod,
-    paymentStatus,
-    userId,
-    restaurantId,
-    items,
-  } = req.body;
   try {
+    const userId = req.user?.userId || req.user?.id;
+
+    if (!userId) {
+      return res.status(400).json({
+        error: "User identification required",
+        success: false,
+      });
+    }
+    const {
+      totalAmount,
+      deliveryAddress,
+      deliveryNotes,
+      paymentMethod,
+      paymentStatus,
+      restaurantId,
+      items,
+    } = req.body;
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({
+        error: "Cart is empty",
+        success: false,
+      });
+    }
     const new_order = await Order.create({
       totalAmount: totalAmount,
       status: "Pending",
       deliveryAddress: deliveryAddress,
-      deliveryNotes: deliveryNotes,
+      deliveryNotes: deliveryNotes || "",
       paymentMethod: paymentMethod,
-      paymentStatus: paymentStatus,
+      paymentStatus: paymentStatus || "Pending",
       userId: userId,
       restaurantId: restaurantId,
       createdAt: new Date(),
@@ -406,19 +444,29 @@ exports.createOrder_items = async (req: Request, res: Response) => {
     const orderItems = items.map((item: any) => ({
       quantity: item.quantity,
       unitPrice: item.unitPrice,
-      subtotal: item.subtotal,
+      subtotal: item.subtotal || item.unitPrice * item.quantity,
       orderId: new_order.id,
       productId: item.productId,
       createdAt: new Date(),
       updatedAt: new Date(),
     }));
+
     await OrderItem.bulkCreate(orderItems);
-    res.status(200).json({ Success: "New order created!", success: true });
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error", success: false });
+
+    res.status(201).json({
+      Success: "New order created!",
+      success: true,
+      orderId: new_order.id,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
   }
 };
 
+// Get restaurants by searchparams (name)
 export const getRest_bySearchName = async (req: Request, res: Response) => {
   const search_name = String(req.query.searchTerm);
   try {
@@ -436,6 +484,28 @@ export const getRest_bySearchName = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error in getRest_bySearchName:", error);
+    return res.status(500).json({
+      error: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+// Get orders by searchparams (name)
+export const getOrder_byUser = async (req: Request, res: Response) => {
+  const { id } = req.params
+  try {
+    const orders = await Order.findAll({
+      where: {
+        userId: id,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      orders: orders,
+    });
+  } catch (error) {
     return res.status(500).json({
       error: "Internal Server Error",
       success: false,

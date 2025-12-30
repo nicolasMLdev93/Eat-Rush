@@ -9,9 +9,9 @@ const { validate_Results } = require("../middlewares/results_validator");
 // Existence validators //
 const { validateExistantUser_register, validateExistantUser_login, validateExistantCreateCategory, validateExistantCreateRestaurant, validateExistantCreateProduct, validateExistantDeleteRest, validateExistantDeleteCat, validateExistantDeleteProd, validateExistanProd_byId, validateExistanProd_byCat, validateExistanProd_byRest, validateExistanRest_byId, validateExistantRes_byName, validateExistanCat_byId, validateExistantCat_byName, validateExistantRes_bySearchName, } = require("../middlewares/existence_validators");
 // Validate admin with token
-const { validateAdminToken, validateUserToken, } = require("../middlewares/validate_token");
+const { validateToken } = require("../middlewares/validate_token");
 // Controllers//
-const { getProducts, getRestaurants, getCategories, registerUser, loginUser, createProduct, createRestaurant, createCategory, deleteRestaurant, deleteProduct, deleteCategory, getProd_byId, getProd_byCat, getProd_byRest, getRest_byId, getRest_byName, getCategory_byId, getCat_byName, createOrder_items, getRest_bySearchName, } = require("../controllers/controllers");
+const { getProducts, getRestaurants, getCategories, registerUser, loginUser, createProduct, createRestaurant, createCategory, deleteRestaurant, deleteProduct, deleteCategory, getProd_byId, getProd_byCat, getProd_byRest, getRest_byId, getRest_byName, getCategory_byId, getCat_byName, createOrder_items, getRest_bySearchName, getOrder_byUser, } = require("../controllers/controllers");
 // Basic getters //
 // Get products //
 router.get("/products", getProducts);
@@ -20,18 +20,18 @@ router.get("/restaurants", getRestaurants);
 // Get categories //
 router.get("/categories", getCategories);
 // Create products, restaurants and categories //
-router.post("/product", validateCreateProduct, validate_Results, validateExistantCreateProduct, validateAdminToken, createProduct);
-router.post("/restaurant", validateCreateRestaurant, validate_Results, validateExistantCreateRestaurant, validateAdminToken, createRestaurant);
-router.post("/category", validateCreateCategory, validate_Results, validateExistantCreateCategory, validateAdminToken, createCategory);
+router.post("/product", validateCreateProduct, validate_Results, validateExistantCreateProduct, validateToken, createProduct);
+router.post("/restaurant", validateCreateRestaurant, validate_Results, validateExistantCreateRestaurant, validateToken, createRestaurant);
+router.post("/category", validateCreateCategory, validate_Results, validateExistantCreateCategory, validateToken, createCategory);
 // Create new user and login //
 // Create users //
 router.post("/register", validateRegisterUser, validate_Results, validateExistantUser_register, registerUser);
 // Login users//
 router.post("/login", validateLoginUser, validate_Results, validateExistantUser_login, loginUser);
 // Delete products, categories and restaurants (with soft delete)//
-router.put("/product", validateSoftDelete, validate_Results, validateAdminToken, validateExistantDeleteProd, deleteProduct);
-router.put("/restaurant", validateSoftDelete, validate_Results, validateAdminToken, validateExistantDeleteRest, deleteRestaurant);
-router.put("/category", validateSoftDelete, validate_Results, validateAdminToken, validateExistantDeleteCat, deleteCategory);
+router.put("/product", validateSoftDelete, validate_Results, validateToken, validateExistantDeleteProd, deleteProduct);
+router.put("/restaurant", validateSoftDelete, validate_Results, validateToken, validateExistantDeleteRest, deleteRestaurant);
+router.put("/category", validateSoftDelete, validate_Results, validateToken, validateExistantDeleteCat, deleteCategory);
 // Get products, restaurants, categories by params and query params //
 router.get("/products_id/:id", validateGetProduct_Id, validate_Results, validateExistanProd_byId, getProd_byId);
 router.get("/products_cat/:categoryId", validateGetProduct_Cat, validate_Results, validateExistanProd_byCat, getProd_byCat);
@@ -41,7 +41,9 @@ router.get("/restaurant/name/:nameSlug", validateGetRestaurant_Name, validate_Re
 router.get("/category/:id", validateGetCategory_Id, validate_Results, validateExistanCat_byId, getCategory_byId);
 router.get("/category/name/:nameSlug", validateGetCategory_Name, validate_Results, validateExistantCat_byName, getCat_byName);
 // Insert orders and products in each order
-router.post("/new_order", validateCreateOrder, validate_Results, validateUserToken, createOrder_items);
-// Get restaurants by query params
+router.post("/new_order", validateCreateOrder, validate_Results, validateToken, createOrder_items);
+// Get restaurants by query params (name)
 router.get("/restaurant_search", validateGetRestaurant_SearchName, validate_Results, validateExistantRes_bySearchName, getRest_bySearchName);
+// Get orders by user
+router.get("/orders/:id", validate_Results, getOrder_byUser);
 module.exports = router;

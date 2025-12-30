@@ -7,10 +7,26 @@ interface RestaurantApi {
   isActive: boolean;
 }
 
+interface OrderApi {
+  id: number;
+  totalAmount: number;
+  status: string;
+  deliveryAddress: string;
+  deliveryNotes: string;
+  paymentMethod: string;
+  paymentStatus: string;
+  userId: number;
+}
+
 interface CategoryApi {
   id: number;
   name: string;
   isActive: boolean;
+}
+
+interface ApiResponse_orders {
+  orders: OrderApi[];
+  success: boolean;
 }
 
 interface ApiResponse_restaurants {
@@ -74,7 +90,7 @@ interface Cart_state {
   cart: Product_cart[];
   total: number;
   logged: boolean;
-  total_products:number;
+  total_products: number;
 }
 
 export type {
@@ -87,5 +103,9 @@ export type {
   ApiResponse_restaurant_ID,
   ApiResponse_category_ID,
   Technology,
-  Product_cart,Cart_state,ApiResponse_restaurant_SearchName
+  Product_cart,
+  Cart_state,
+  ApiResponse_restaurant_SearchName,
+  OrderApi,
+  ApiResponse_orders,
 };

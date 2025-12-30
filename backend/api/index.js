@@ -5,19 +5,16 @@ const port = process.env.PORT || 3000;
 const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
-const dotenv = require('dotenv');
+const path = require('path');
 const route = require("./routes/route");
-dotenv.config();
+require('dotenv').config({
+    path: path.join(__dirname, '..', '.env')
+});
 app.use(express.json());
 app.use(helmet());
 app.use(cors());
-// Root of the project //
+app.use(morgan('dev'));
 app.use("/", route);
 app.listen(port, () => {
-    try {
-        console.log(`App listening on port ${port}`);
-    }
-    catch (error) {
-        console.log(`Error connecting to port ${port}`);
-    }
+    console.log(`App listening on port ${port}`);
 });

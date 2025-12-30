@@ -1,10 +1,11 @@
-import React, { useState, FormEvent, ChangeEvent } from "react";
+import React, { useState, FormEvent } from "react";
 import "../styles/payment.css";
 import Footer from "../components/footer";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { clear_cart } from "../cart/slice";
+import { jwtDecode } from "jwt-decode";
 
 const Payment: React.FC = () => {
   const { cart, total, logged, total_products } = useSelector(
@@ -12,6 +13,8 @@ const Payment: React.FC = () => {
   );
   const navigate = useNavigate();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const dispatch = useDispatch();
 
@@ -87,36 +90,61 @@ const Payment: React.FC = () => {
       expiryDate: value,
     });
   };
+  
+  
+  const showError = (message: string) => {
+    setErrorMessage(message);
+    setShowErrorModal(true);
+  };
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setIsProcessing(true);
+  e.preventDefault();
+  setIsProcessing(true);
+  const token = localStorage.getItem("authToken");
+  
+  if (!token) {
+    showError("No se encontró el token de autenticación.");
+    setIsProcessing(false);
+    return;
+  }
 
-    try {
-      const response = await fetch("http://localhost:3000/new_order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          totalAmount: total + formData.tip,
-          status: "Pending",
-          deliveryAddress: formData.address,
-          deliveryNotes: formData.deliveryInstructions,
-          paymentMethod: paymentMethod,
-          paymentStatus: "Pending",
-          userId: 3,
-          restaurantId: null,
-          items: cart.map((item) => ({
-            quantity: item.quantity,
-            unitPrice: item.price,
-            subtotal: item.price * item.quantity,
-            productId: item.id,
-          })),
-        }),
-      });
+  try {
+    const decoded = jwtDecode(token);
+    const userId = decoded.userId || decoded.id;
+    
+    if (!userId) {
+      showError("No se pudo identificar el usuario.");
+      setIsProcessing(false);
+      return;
+    }
+
+    const response = await fetch("http://localhost:3000/new_order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        totalAmount: total + formData.tip,
+        status: "Pending",
+        deliveryAddress: formData.address,
+        deliveryNotes: formData.deliveryInstructions,
+        paymentMethod: paymentMethod,
+        paymentStatus: "Pending",
+        userId: userId, 
+        restaurantId: null,
+        items: cart.map((item) => ({
+          quantity: item.quantity,
+          unitPrice: item.price,
+          subtotal: item.price * item.quantity,
+          productId: item.id,
+        })),
+      }),
+    });
+      
       const data = await response.json();
+      
       if (response.ok) {
         setShowSuccessModal(true);
         setTimeout(() => {
@@ -124,11 +152,11 @@ const Payment: React.FC = () => {
           navigate("/");
         }, 3000);
       } else {
-        alert("Error al realizar la compra: " + data.error);
+        showError(`Error al realizar la compra: ${data.error || "Error desconocido"}`);
       }
     } catch (error) {
-      alert("Error de conexión. Inténtalo de nuevo.");
       console.error("Error:", error);
+      showError("Error de conexión. Por favor, verifica tu conexión a internet e inténtalo de nuevo.");
     } finally {
       setIsProcessing(false);
     }
@@ -137,6 +165,10 @@ const Payment: React.FC = () => {
   const closeModalAndRedirect = () => {
     setShowSuccessModal(false);
     navigate("/");
+  };
+
+  const closeErrorModal = () => {
+    setShowErrorModal(false);
   };
 
   return (
@@ -476,6 +508,19 @@ const Payment: React.FC = () => {
             </p>
             <button className="modal-button" onClick={closeModalAndRedirect}>
               Ir al inicio ahora
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showErrorModal && (
+        <div className="modal-overlay">
+          <div className="error-modal">
+            <div className="modal-icon">❌</div>
+            <h2 className="modal-title">Error en la Compra</h2>
+            <p className="modal-message">{errorMessage}</p>
+            <button className="modal-button" onClick={closeErrorModal}>
+              Cerrar
             </button>
           </div>
         </div>
