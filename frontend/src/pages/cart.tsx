@@ -11,7 +11,6 @@ import {
   increase_quantity,
   decrease_quantity,
   clear_cart,
-  login_user,
   logout_user,
 } from "../cart/slice";
 import {

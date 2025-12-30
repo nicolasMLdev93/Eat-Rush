@@ -364,7 +364,7 @@ const RestaurantDetail_Name: React.FC = () => {
 
       <Snackbar
         open={notification.open}
-        autoHideDuration={1000} // 1 segundo
+        autoHideDuration={1000} 
         onClose={handleCloseNotification}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >

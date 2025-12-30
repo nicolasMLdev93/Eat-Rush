@@ -1,56 +1,48 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import get_restaurantByName from "../services/get_restaurantName";
 import "../styles/search_terms.css";
-import type {RestaurantApi} from '../interfaces/interfaces'
+import type { RestaurantApi } from "../interfaces/interfaces";
+import get_restBySearchName from "../services/get_restaurantsQuery";
+import { restaurants_images } from "../data/images";
+import { useNavigate } from "react-router-dom";
 
 const SearchTerms: React.FC = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const searchTerm = queryParams.get("q") || "";
-  
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
   const [restaurants, setRestaurants] = useState<RestaurantApi[]>([]);
 
   useEffect(() => {
-    const fetchRestaurants = async () => {
-      setLoading(true);
-      
-      try {
-        const response = await get_restaurantByName(searchTerm);
-        
-        if (response && Array.isArray(response)) {
-          // Filtrar restaurantes que incluyan el término de búsqueda
-          const searchLower = searchTerm.toLowerCase();
-          const filteredRestaurants = response.filter((restaurant: RestaurantApi) => {
-            // Buscar en nombre, descripción y tipo de cocina
-            const inName = restaurant.name.toLowerCase().includes(searchLower);
-            const inDescription = restaurant.description?.toLowerCase().includes(searchLower) || false;
-            const inCuisine = restaurant.cuisine_type?.toLowerCase().includes(searchLower) || false;
-            
-            return inName || inDescription || inCuisine;
-          });
-          
-          setRestaurants(filteredRestaurants);
+    setLoading(true);
+    get_restBySearchName(searchTerm)
+      .then((response) => {
+        if (response) {
+          setRestaurants(response);
         } else {
           setRestaurants([]);
         }
-      } catch (err) {
-        console.error("Error:", err);
+      })
+      .catch((error) => {
+        console.error("Error fetching restaurants:", error);
         setRestaurants([]);
-      } finally {
+      })
+      .finally(() => {
         setLoading(false);
-      }
-    };
-
-    fetchRestaurants();
+      });
   }, [searchTerm]);
+
+  const get_restImg = (id: number) => {
+    const img = restaurants_images.find((img) => img.id === id);
+    return img?.image;
+  };
 
   const highlightSearchTerm = (text: string) => {
     if (!searchTerm.trim()) return text;
-    
-    const regex = new RegExp(`(${searchTerm})`, 'gi');
+
+    const regex = new RegExp(`(${searchTerm})`, "gi");
     return text.replace(regex, '<span class="highlight">$1</span>');
   };
 
@@ -68,17 +60,19 @@ const SearchTerms: React.FC = () => {
   return (
     <div className="search-page">
       <div className="search-header">
-        <h1 className="search-title">
-          Resultados de búsqueda
-        </h1>
+        <h1 className="search-title">Resultados de búsqueda</h1>
         <p className="results-count">
           {restaurants.length === 0 ? (
             "No se encontraron restaurantes"
           ) : (
             <>
-              Encontramos <strong>{restaurants.length}</strong> restaurante{restaurants.length !== 1 ? 's' : ''} 
+              Encontramos <strong>{restaurants.length}</strong> restaurante
+              {restaurants.length !== 1 ? "s" : ""}
               {searchTerm && (
-                <> para "<span className="search-term">{searchTerm}</span>"</>
+                <>
+                  {" "}
+                  para "<span className="search-term">{searchTerm}</span>"
+                </>
               )}
             </>
           )}
@@ -90,7 +84,7 @@ const SearchTerms: React.FC = () => {
           <div className="no-results-icon">🔍</div>
           <h2 className="no-results-title">No encontramos resultados</h2>
           <p className="no-results-text">
-            {searchTerm 
+            {searchTerm
               ? `No hay restaurantes que coincidan con "${searchTerm}"`
               : "Intenta buscar con otro término"}
           </p>
@@ -100,57 +94,50 @@ const SearchTerms: React.FC = () => {
           {restaurants.map((restaurant) => (
             <div key={restaurant.id} className="restaurant-card">
               <div className="restaurant-image-container">
-                {restaurant.image_url ? (
-                  <img 
-                    
-                    alt={restaurant.name} 
-                    className="restaurant-image" 
+                {get_restImg(restaurant.id) ? (
+                  <img
+                    src={get_restImg(restaurant.id)}
+                    alt={restaurant.name}
+                    className="restaurant-image"
                   />
                 ) : (
                   <div className="empty-image">🍽️</div>
                 )}
-                
-                
-                
-                <button className="favorite-btn">
-                  "❤️" 
-                </button>
+
+                <button className="favorite-btn">❤️</button>
               </div>
 
               <div className="restaurant-info">
                 <div className="restaurant-header">
-                  <h3 
-                    className="restaurant-name" 
-                    dangerouslySetInnerHTML={{ 
-                      __html: highlightSearchTerm(restaurant.name) 
-                    }} 
+                  <h3
+                    className="restaurant-name"
+                    dangerouslySetInnerHTML={{
+                      __html: highlightSearchTerm(restaurant.name),
+                    }}
                   />
-                  
-                  <span>4.5</span>
+
+                  <span className="restaurant-rating">4.5</span>
                 </div>
 
-
                 {restaurant.description && (
-                  <p 
-                    style={{ 
-                      fontSize: "0.9rem", 
-                      color: "#666", 
-                      marginBottom: "15px",
-                      lineHeight: "1.4"
+                  <p
+                    className="restaurant-description"
+                    dangerouslySetInnerHTML={{
+                      __html: highlightSearchTerm(restaurant.description),
                     }}
-                    dangerouslySetInnerHTML={{ 
-                      __html: highlightSearchTerm(restaurant.description) 
-                    }} 
                   />
                 )}
 
                 <div className="restaurant-footer">
                   <div className="delivery-info">
                     <span className="delivery-icon">⏱️</span>
-                    {"15-30 min"}
+                    {restaurant.id % 2 === 0 ? "25-30 min" : "20-30 min"}
                   </div>
-                  
-                  <button className="order-btn">
+
+                  <button
+                    onClick={() => navigate(`/restaurant/${restaurant.id}`)}
+                    className="order-btn"
+                  >
                     Ordenar
                   </button>
                 </div>

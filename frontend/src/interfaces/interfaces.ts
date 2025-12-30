@@ -23,6 +23,11 @@ interface ApiResponse_restaurant_ID {
   success: boolean;
 }
 
+interface ApiResponse_restaurant_SearchName {
+  restaurants: RestaurantApi[];
+  success: boolean;
+}
+
 interface ApiResponse_categories {
   categories: CategoryApi[];
   success: boolean;
@@ -82,5 +87,5 @@ export type {
   ApiResponse_restaurant_ID,
   ApiResponse_category_ID,
   Technology,
-  Product_cart,Cart_state
+  Product_cart,Cart_state,ApiResponse_restaurant_SearchName
 };
