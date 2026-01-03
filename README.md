@@ -8,27 +8,27 @@ Para correr el sevidor /backend/api y ejecutar => node index.js
 Para correr la app frontend /frontend y ejecutar => npm run dev
 
 🏗️ Arquitectura Técnica:
-Backend (API RESTful)
+Backend (API RESTful).
 Lenguaje: TypeScript con Node.js
 
-Framework: Express.js para gestión de rutas y middleware
+Framework: Express.js para gestión de rutas y middleware.
 
-ORM: Sequelize para manipulación de base de datos
-Base de Datos: MySQL alojada en Clever Cloud
-Autenticación: JWT (JSON Web Tokens)
-API RESTful: Endpoints documentados para productos, usuarios y pedidos
+ORM: Sequelize para manipulación de base de datos.
+Base de Datos: MySQL alojada en Clever Cloud.
+Autenticación: JWT (JSON Web Tokens).
+API RESTful: Endpoints documentados para productos, usuarios y pedidos.
 
-Frontend (Aplicación Web)
-Lenguaje: TypeScript
-Framework: React con Ts
-Gestión de Estado: Redux Toolkit para estado global
-Estilos: CSS Modules / Styled Components
-Enrutamiento: React Router DOM
-UI Components: Material-UI
+Frontend (Aplicación Web).
+Lenguaje: TypeScript.
+Framework: React con Ts.
+Gestión de Estado: Redux Toolkit para estado global.
+Estilos: CSS Modules / Styled Components.
+Enrutamiento: React Router DOM.
+UI Components: Material-UI.
 
-Base de Datos (Clever Cloud - MySQL)
-Proveedor: Clever Cloud
-Tipo: MySQL Managed Database
-Características: Escalabilidad automática, backups automáticos, alta disponibilidad
-Modelos Principales: Usuarios, Productos, Categorías, Pedidos, Detalles de Pedido, Restaurantes
+Base de Datos (Clever Cloud - MySQL).
+Proveedor: Clever Cloud.
+Tipo: MySQL Managed Database.
+Características: Escalabilidad automática, backups automáticos, alta disponibilidad.
+Modelos Principales: Usuarios, Productos, Categorías, Pedidos, Detalles de Pedido, Restaurantes.
 
